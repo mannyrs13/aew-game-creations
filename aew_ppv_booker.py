@@ -1,11 +1,14 @@
 import streamlit as st
 import random
+from streamlit_local_storage import LocalStorage
 
-st.set_page_config(page_title="AEW PPV GM Sorter", page_icon="📋", layout="wide")
+st.set_page_config(page_title="AEW PPV GM Booker", page_icon="📋", layout="wide")
 
-# --- AEW UNIVERSE DATA ---
-PPV_EVENTS = ["AEW Revolution", "AEW Dynasty", "AEW Double or Nothing", "AEW x NJPW Forbidden Door", "AEW All In", "AEW All Out", "AEW WrestleDream", "AEW Full Gear", "AEW Worlds End"]
-MATCH_COUNTS = [8, 9, 10]
+# Initialize Local Storage
+localS = LocalStorage()
+
+# Retrieve the saved Personal Best (if it exists)
+personal_best = localS.getItem("aew_ppv_pb")
 
 # --- EXACT AUGUST 2026 ROSTER (Strictly Separated) ---
 MENS_ROSTER = [
@@ -81,6 +84,10 @@ STAR_POWER_DB = {
     "Mercedes Moné": 96, "Toni Storm": 94, "Mayu Iwatani": 93, "Jamie Hayter": 92, "Britt Baker": 91, "Athena": 89, "Hikaru Shida": 88, "Willow Nightingale": 88, "Mina Shirakawa": 86, "Starlight Kid": 86, "Kris Statlander": 85, "Thunder Rosa": 85, "AZM": 85, "Julia Hart": 84, "Momo Watanabe": 84, "Deonna Purrazzo": 83, "Serena Deeb": 82, "Kamille": 80, "Persephone": 80, "Skye Blue": 79, "Megan Bayne": 79, "Queen Aminata": 78, "Taya Valkyrie": 77, "Billie Starkz": 76, "Thekla": 75, "Anna Jay": 75, "Zeuxis": 75, "Red Velvet": 74, "Emi Sakura": 74, "Maya World": 73, "Alex Windsor": 73, "Harley Cameron": 72, "Penelope Ford": 72, "Lena Kross": 72, "Diamante": 71,
     "The Elite": 95, "The Young Bucks": 95, "FTR": 94, "The Death Riders": 93, "Timeless Love Bombs": 90, "The Hurt Syndicate": 89, "Motor City Machine Guns": 88, "TMDK": 88, "Mistico, Volador Jr. & Atlantis Jr.": 88, "Bang Bang Gang": 87, "The Conglomeration": 86, "Bishamon": 86, "The Don Callis Family": 85, "The Acclaimed & Daddy Ass": 85, "The Brawling Birds": 85, "Guerreros Laguneros": 85, "The Babes of Wrath": 84, "La Facción Ingobernable": 83, "The Gunns": 82, "Sisters of Sin": 82, "Undisputed Kingdom": 81, "Top Flight": 80, "Top Flight & Action Andretti": 79, "The Outrunners": 79, "Private Party": 78, "SkyFlight": 78, "MxM Collection": 77, "The Righteous": 76, "Gates of Agony": 76, "Divine Dominion": 76, "Dark Order": 75, "The Premier Athletes": 74
 }
+
+# --- AEW UNIVERSE DATA ---
+PPV_EVENTS = ["AEW Revolution", "AEW Dynasty", "AEW Double or Nothing", "AEW x NJPW Forbidden Door", "AEW All In", "AEW All Out", "AEW WrestleDream", "AEW Full Gear", "AEW Worlds End"]
+MATCH_COUNTS = [8, 9, 10]
 
 # --- SESSION STATE INITIALIZATION ---
 if "card_data" not in st.session_state:
@@ -204,7 +211,20 @@ def place_talent(match_idx, slot_idx):
         st.session_state.card_data[match_idx]["score"] = calc_score(slots)
 
 # --- UI LAYOUT ---
-st.title("AEW PPV GM Sorter")
+st.title("AEW PPV GM Booker")
+
+# Display Personal Best in the Sidebar
+with st.sidebar:
+    st.header("🎮 Your GM Stats")
+    # Check if personal_best exists in local storage and is a valid float
+    if personal_best:
+        try:
+            st.metric(label="🏆 Personal Best Score", value=f"{float(personal_best):.1f} / 100")
+        except ValueError:
+            st.metric(label="🏆 Personal Best Score", value="No completed cards yet")
+    else:
+        st.metric(label="🏆 Personal Best Score", value="No completed cards yet")
+    st.markdown("*(Your score is saved privately on this device)*")
 
 st.markdown("---")
 
@@ -277,7 +297,16 @@ else:
     
     if all_complete and st.session_state.card_data:
         avg_score = sum(m["score"] for m in st.session_state.card_data) / len(st.session_state.card_data)
-        summary = f"OVERALL EVENT SCORE: {avg_score:.1f} / 100"
+        
+        # Local Storage High Score Logic
+        if not personal_best or avg_score > float(personal_best):
+            localS.setItem("aew_ppv_pb", avg_score)
+            st.balloons()
+            st.success(f"🎉 NEW PERSONAL BEST RECORD! You scored {avg_score:.1f} / 100! 🎉")
+            summary = f"OVERALL EVENT SCORE: {avg_score:.1f} / 100 (New Personal Best!)"
+        else:
+            st.info(f"OVERALL EVENT SCORE: {avg_score:.1f} / 100")
+            summary = f"OVERALL EVENT SCORE: {avg_score:.1f} / 100"
     else:
         summary = "OVERALL EVENT SCORE: TBD (Incomplete Matches)"
         
