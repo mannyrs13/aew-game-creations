@@ -1,4 +1,5 @@
 import streamlit as st
+import random
 
 # 1. Page Configuration
 st.set_page_config(
@@ -71,7 +72,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 3. Wrestler Star Ratings Database
+# 3. Wrestler Ratings Database
 RATINGS = {
     "Will Ospreay": 97.5, "Christian Cage": 88.0, "Orange Cassidy": 86.5, "Bandido": 85.8,
     "Hologram": 80.0, "Claudio Castagnoli": 88.7, "Wheeler Yuta": 82.3, "Roderick Strong": 84.1,
@@ -79,19 +80,26 @@ RATINGS = {
     "Katsuyori Shibata": 85.0, "Jon Moxley": 92.3, "Daniel Garcia": 81.5, "Ricochet": 87.8
 }
 
-# Initialize State
+# Helper function to generate a newly randomized roster
+def get_shuffled_roster():
+    keys = list(RATINGS.keys())
+    random.shuffle(keys)
+    return keys
+
+# Initialize Session State
 if "slots" not in st.session_state:
     st.session_state.slots = {}
 if "match_scores" not in st.session_state:
     st.session_state.match_scores = []
 if "pb_score" not in st.session_state:
     st.session_state.pb_score = 87.8
+if "roster" not in st.session_state:
+    st.session_state.roster = get_shuffled_roster()
 
-roster = list(RATINGS.keys())
 drafted_count = sum(1 for k in st.session_state.slots.keys() if k.startswith("r16_"))
-current_wrestler = roster[drafted_count] if drafted_count < len(roster) else "DRAFT COMPLETE"
+current_wrestler = st.session_state.roster[drafted_count] if drafted_count < len(st.session_state.roster) else "DRAFT COMPLETE"
 
-# --- SCORING CALCULATION FUNCTION ---
+# --- SCORING CALCULATION ---
 def calc_match_score(p1, p2, round_multiplier=1.0):
     if p1 in RATINGS and p2 in RATINGS:
         base = (RATINGS[p1] + RATINGS[p2]) / 2.0
@@ -100,7 +108,6 @@ def calc_match_score(p1, p2, round_multiplier=1.0):
         return round(min(score, 100.0), 1)
     return 80.0
 
-# Calculate current tournament overall grade
 if st.session_state.match_scores:
     current_avg = round(sum(st.session_state.match_scores) / len(st.session_state.match_scores), 1)
     if current_avg > st.session_state.pb_score:
@@ -116,6 +123,7 @@ with nav_c1:
     if st.button("🚨 NEW TOURNAMENT", type="primary"):
         st.session_state.slots = {}
         st.session_state.match_scores = []
+        st.session_state.roster = get_shuffled_roster()  # Reshuffle roster on new tournament
         st.rerun()
 
 with nav_c2:
@@ -129,7 +137,7 @@ with nav_c3:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Helper function for slot clicks
+# Helper function for draft slot clicks
 def handle_r16_click(key):
     if key not in st.session_state.slots and current_wrestler != "DRAFT COMPLETE":
         st.session_state.slots[key] = current_wrestler
@@ -147,7 +155,6 @@ with c1:
             handle_r16_click(slot_key)
             if current_wrestler == "DRAFT COMPLETE" and label != "Place Here":
                 st.session_state.slots[f"qf_l_{i//2}"] = label
-                # Score R16 Match
                 p_opp = st.session_state.slots.get(f"r16_l_{i^1}", "")
                 if p_opp:
                     st.session_state.match_scores.append(calc_match_score(label, p_opp, 0.95))
