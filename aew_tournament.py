@@ -25,8 +25,8 @@ with col_msg:
 
 st.markdown("---")
 
-# 2. Pure SVG & HTML Tournament Bracket matching the user image
-exact_bracket_html = """
+# 2. Perfected SVG & HTML Tournament Bracket Component
+polished_bracket_html = """
 <!DOCTYPE html>
 <html>
 <head>
@@ -47,9 +47,9 @@ exact_bracket_html = """
     .bracket-wrapper {
         position: relative;
         width: 100%;
-        max-width: 1200px;
+        max-width: 1280px;
         margin: 0 auto;
-        height: 650px;
+        height: 700px;
     }
 
     /* SVG Overlay for Bracket Lines */
@@ -64,7 +64,7 @@ exact_bracket_html = """
     }
 
     .bracket-lines path {
-        stroke: #64748b;
+        stroke: #475569;
         stroke-width: 2;
         fill: none;
     }
@@ -82,7 +82,8 @@ exact_bracket_html = """
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        width: 15%;
+        width: 15.5%;
+        padding-top: 35px; /* Leave space for top column titles */
     }
 
     .col-finals {
@@ -91,17 +92,19 @@ exact_bracket_html = """
         justify-content: center;
         align-items: center;
         width: 18%;
+        padding-top: 35px;
     }
 
+    /* Clean, Spanned Column Headers */
     .col-header {
-        text-align: center;
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: #9ca3af;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
         position: absolute;
         top: 0;
+        text-align: center;
+        font-size: 0.78rem;
+        font-weight: 800;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
         width: 100%;
     }
 
@@ -110,13 +113,13 @@ exact_bracket_html = """
         background: #1e293b;
         border: 1px solid #334155;
         border-radius: 6px;
-        padding: 4px;
+        padding: 2px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
     }
 
     .slot {
-        padding: 6px 8px;
-        font-size: 0.8rem;
+        padding: 6px 10px;
+        font-size: 0.82rem;
         font-weight: 600;
         color: #e2e8f0;
         display: flex;
@@ -124,8 +127,6 @@ exact_bracket_html = """
         align-items: center;
         border-bottom: 1px solid #334155;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     .slot:last-child {
@@ -141,59 +142,58 @@ exact_bracket_html = """
 
     .rating {
         color: #fbbf24;
-        font-size: 0.72rem;
-        margin-left: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        margin-left: 6px;
     }
 
     /* Finals Centerpiece */
     .finals-card {
         background: #0f172a;
         border: 2px solid #f59e0b;
-        border-radius: 8px;
-        padding: 12px;
+        border-radius: 10px;
+        padding: 14px;
         width: 100%;
         text-align: center;
+        box-shadow: 0 8px 16px rgba(245, 158, 11, 0.15);
     }
 
-    .finals-title { color: #f59e0b; font-size: 1rem; font-weight: 800; margin-bottom: 6px; }
-    .vs-text { color: #ef4444; font-weight: 800; font-size: 0.8rem; margin: 4px 0; }
-    .champ-title { color: #10b981; font-size: 0.95rem; font-weight: 800; margin-top: 14px; margin-bottom: 6px; }
+    .finals-title { color: #f59e0b; font-size: 1.05rem; font-weight: 800; margin-bottom: 8px; }
+    .vs-text { color: #ef4444; font-weight: 800; font-size: 0.85rem; margin: 6px 0; }
+    .champ-title { color: #10b981; font-size: 1rem; font-weight: 800; margin-top: 16px; margin-bottom: 8px; }
 </style>
 </head>
 <body>
 
 <div class="bracket-wrapper">
-    <!-- SVG CONNECTING LINES (Exact shape from user diagram) -->
-    <svg class="bracket-lines" viewBox="0 0 1000 650" preserveAspectRatio="none">
+    <!-- SVG CONNECTING LINES (Clean coordinate mapping) -->
+    <svg class="bracket-lines" viewBox="0 0 1200 700" preserveAspectRatio="none">
         <!-- LEFT SIDE BRANCHES -->
         <!-- R16 to QF -->
-        <path d="M 150,60 H 180 V 130 H 150 M 180,95 H 210" />
-        <path d="M 150,200 H 180 V 270 H 150 M 180,235 H 210" />
-        <path d="M 150,340 H 180 V 410 H 150 M 180,375 H 210" />
-        <path d="M 150,480 H 180 V 550 H 150 M 180,515 H 210" />
+        <path d="M 185,90 H 215 V 170 H 185 M 215,130 H 245" />
+        <path d="M 185,250 H 215 V 330 H 185 M 215,290 H 245" />
+        <path d="M 185,410 H 215 V 490 H 185 M 215,450 H 245" />
+        <path d="M 185,570 H 215 V 650 H 185 M 215,610 H 245" />
 
         <!-- QF to SF -->
-        <path d="M 360,95 H 390 V 235 H 360 M 390,165 H 420" />
-        <path d="M 360,375 H 390 V 515 H 360 M 390,445 H 420" />
+        <path d="M 430,130 H 460 V 290 H 430 M 460,210 H 490" />
+        <path d="M 430,450 H 460 V 610 H 430 M 460,530 H 490" />
 
         <!-- SF to FINALS -->
-        <path d="M 570,165 H 600 V 445 H 570 M 600,305 H 630" />
+        <path d="M 675,210 H 705 V 530 H 675 M 705,370 H 735" />
 
         <!-- RIGHT SIDE BRANCHES -->
-        <!-- R16 to QF -->
-        <path d="M 850,60 H 820 V 130 H 850 M 820,95 H 790" />
-        <path d="M 850,200 H 820 V 270 H 850 M 820,235 H 790" />
-        <path d="M 850,340 H 820 V 410 H 850 M 820,375 H 790" />
-        <path d="M 850,480 H 820 V 550 H 850 M 820,515 H 790" />
-
-        <!-- QF to SF -->
-        <path d="M 640,95 H 610 V 235 H 640 M 610,165 H 580" opacity="0" /> <!-- Spacer -->
+        <!-- SF to FINALS -->
+        <path d="M 1015,90 H 985 V 170 H 1015 M 985,130 H 955" />
+        <path d="M 1015,250 H 985 V 330 H 1015 M 985,290 H 955" />
+        <path d="M 1015,410 H 985 V 490 H 1015 M 985,450 H 955" />
+        <path d="M 1015,570 H 985 V 650 H 1015 M 985,610 H 955" />
     </svg>
 
     <!-- BRACKET CONTENT GRID -->
     <div class="bracket-grid">
         <!-- LEFT: R16 -->
-        <div class="col" style="padding-top: 25px;">
+        <div class="col" style="position: relative;">
             <div class="col-header">Round of 16</div>
             <div class="match-box"><div class="slot">Will Ospreay</div><div class="slot">Christian Cage</div></div>
             <div class="match-box"><div class="slot">Orange Cassidy</div><div class="slot">Bandido</div></div>
@@ -202,7 +202,7 @@ exact_bracket_html = """
         </div>
 
         <!-- LEFT: QF -->
-        <div class="col" style="padding-top: 25px;">
+        <div class="col" style="position: relative;">
             <div class="col-header">Quarterfinals</div>
             <div class="match-box">
                 <div class="slot winner">Will Ospreay <span class="rating">⭐ 97.5</span></div>
@@ -215,7 +215,7 @@ exact_bracket_html = """
         </div>
 
         <!-- LEFT: SF -->
-        <div class="col" style="padding-top: 25px;">
+        <div class="col" style="position: relative;">
             <div class="col-header">Semifinals</div>
             <div class="match-box">
                 <div class="slot">SF Slot 1</div>
@@ -224,8 +224,8 @@ exact_bracket_html = """
         </div>
 
         <!-- CENTER: FINALS -->
-        <div class="col-finals">
-            <div class="col-header" style="top: 25px;">Finals</div>
+        <div class="col-finals" style="position: relative;">
+            <div class="col-header">Finals</div>
             <div class="finals-card">
                 <div class="finals-title">👑 FINALS 👑</div>
                 <div class="slot" style="justify-content: center; background: #1e293b; border-radius: 4px;">Finalist 1</div>
@@ -238,7 +238,7 @@ exact_bracket_html = """
         </div>
 
         <!-- RIGHT: SF -->
-        <div class="col" style="padding-top: 25px;">
+        <div class="col" style="position: relative;">
             <div class="col-header">Semifinals</div>
             <div class="match-box">
                 <div class="slot">SF Slot 1</div>
@@ -247,7 +247,7 @@ exact_bracket_html = """
         </div>
 
         <!-- RIGHT: QF -->
-        <div class="col" style="padding-top: 25px;">
+        <div class="col" style="position: relative;">
             <div class="col-header">Quarterfinals</div>
             <div class="match-box">
                 <div class="slot">Hangman Page <span class="rating">⭐ 91.2</span></div>
@@ -260,7 +260,7 @@ exact_bracket_html = """
         </div>
 
         <!-- RIGHT: R16 -->
-        <div class="col" style="padding-top: 25px;">
+        <div class="col" style="position: relative;">
             <div class="col-header">Round of 16</div>
             <div class="match-box"><div class="slot">Darby Allin</div><div class="slot">Hangman Page</div></div>
             <div class="match-box"><div class="slot">Kyle Fletcher</div><div class="slot">Kyle O'Reilly</div></div>
@@ -274,5 +274,5 @@ exact_bracket_html = """
 </html>
 """
 
-# Render embedded HTML bracket with 680px fixed height canvas
-components.html(exact_bracket_html, height=680, scrolling=True)
+# Render embedded HTML bracket with 720px fixed height canvas
+components.html(polished_bracket_html, height=720, scrolling=True)
