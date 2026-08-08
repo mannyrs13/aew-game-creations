@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 # 1. Page Config
 st.set_page_config(
@@ -7,76 +8,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
-# 2. Custom CSS for clean cards, uniform text, and fixed heights
-st.markdown("""
-    <style>
-    /* Compact Layout */
-    .block-container {
-        padding-top: 1rem !important;
-        padding-bottom: 2rem !important;
-        max-width: 98% !important;
-    }
-
-    /* Style Streamlit buttons inside match containers */
-    div.stButton > button {
-        width: 100% !important;
-        background-color: #1e293b !important;
-        color: #f8fafc !important;
-        border: 1px solid #334155 !important;
-        border-radius: 6px !important;
-        padding: 0.35rem 0.4rem !important;
-        font-weight: 600 !important;
-        font-size: 0.8rem !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        margin: 1px 0 !important;
-    }
-
-    div.stButton > button:hover {
-        border-color: #3b82f6 !important;
-        background-color: #1e3a8a !important;
-        color: #ffffff !important;
-    }
-
-    /* Round Title Headers */
-    .round-title {
-        text-align: center;
-        font-weight: 700;
-        font-size: 0.82rem;
-        color: #9ca3af;
-        text-transform: uppercase;
-        margin-bottom: 0.8rem;
-        letter-spacing: 0.05em;
-        height: 20px;
-    }
-
-    .center-title {
-        text-align: center;
-        color: #f59e0b;
-        font-weight: 800;
-        font-size: 1.1rem;
-        margin-bottom: 0.5rem;
-    }
-
-    /* Match Container Styling */
-    [data-testid="stVerticalBlockBorderWrapper"] {
-        background-color: #0f172a !important;
-        border-color: #334155 !important;
-        border-radius: 8px !important;
-        padding: 4px 6px !important;
-    }
-
-    /* PRECISE ALIGNMENT SPACERS */
-    .qf-top-spacer { height: 48px; }
-    .qf-mid-spacer { height: 86px; }
-
-    .sf-top-spacer { height: 138px; }
-
-    .finals-top-spacer { height: 110px; }
-    </style>
-""", unsafe_allow_html=True)
 
 # --- SIDEBAR ---
 with st.sidebar:
@@ -94,92 +25,247 @@ with col_msg:
 
 st.markdown("---")
 
-# --- BRACKET LAYOUT (7 COLUMNS) ---
-c1, c2, c3, c4, c5, c6, c7 = st.columns([1.2, 1.2, 1.1, 1.3, 1.1, 1.2, 1.2])
-
-# 1. LEFT - Round of 16
-with c1:
-    st.markdown('<div class="round-title">Round of 16</div>', unsafe_allow_html=True)
-    r16_l = [
-        ("Will Ospreay", "Christian Cage"),
-        ("Orange Cassidy", "Bandido"),
-        ("Hologram", "Claudio Castagnoli"),
-        ("Wheeler Yuta", "Roderick Strong")
-    ]
-    for idx, (p1, p2) in enumerate(r16_l):
-        with st.container(border=True):
-            st.button(p1, key=f"r16_l_{idx}_1")
-            st.button(p2, key=f"r16_l_{idx}_2")
-        if idx < 3:
-            st.markdown('<div style="height: 12px;"></div>', unsafe_allow_html=True)
-
-# 2. LEFT - Quarterfinals
-with c2:
-    st.markdown('<div class="round-title">Quarterfinals</div>', unsafe_allow_html=True)
-    st.markdown('<div class="qf-top-spacer"></div>', unsafe_allow_html=True)
-    with st.container(border=True):
-        st.button("Will Ospreay ⭐ 97.5", key="qf_l_1")
-        st.button("Bandido ⭐ 85.8", key="qf_l_2")
+# 2. Pure HTML/CSS ESPN Bracket Component
+espn_bracket_html = """
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
     
-    st.markdown('<div class="qf-mid-spacer"></div>', unsafe_allow_html=True)
-    with st.container(border=True):
-        st.button("Claudio Castagnoli ⭐ 82.7", key="qf_l_3")
-        st.button("Wheeler Yuta ⭐ 82.3", key="qf_l_4")
+    body {
+        background-color: #0e1117;
+        color: #ffffff;
+        padding: 10px;
+        overflow-x: auto;
+    }
 
-# 3. LEFT - Semifinals
-with c3:
-    st.markdown('<div class="round-title">Semifinals</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sf-top-spacer"></div>', unsafe_allow_html=True)
-    with st.container(border=True):
-        st.button("SF Slot 1", key="sf_l_1")
-        st.button("SF Slot 2", key="sf_l_2")
+    .bracket-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        min-width: 1100px;
+        margin: 0 auto;
+    }
 
-# 4. CENTER - FINALS & CHAMPION
-with c4:
-    st.markdown('<div class="center-title">👑 FINALS 👑</div>', unsafe_allow_html=True)
-    st.markdown('<div class="finals-top-spacer"></div>', unsafe_allow_html=True)
-    with st.container(border=True):
-        st.button("Finalist 1", key="finalist_1")
-        st.markdown("<h5 style='text-align: center; color: #ef4444; margin: 0.2rem 0;'>VS</h5>", unsafe_allow_html=True)
-        st.button("Finalist 2", key="finalist_2")
-    
-    st.markdown('<div class="center-title" style="margin-top: 1.5rem; color: #10b981;">🏆 CHAMPION 🏆</div>', unsafe_allow_html=True)
-    with st.container(border=True):
-        st.button("???", key="champion_slot")
+    .column {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        flex: 1;
+        height: 680px;
+        padding: 0 5px;
+    }
 
-# 5. RIGHT - Semifinals
-with c5:
-    st.markdown('<div class="round-title">Semifinals</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sf-top-spacer"></div>', unsafe_allow_html=True)
-    with st.container(border=True):
-        st.button("SF Slot 1", key="sf_r_1")
-        st.button("SF Slot 2", key="sf_r_2")
+    .col-header {
+        text-align: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 8px;
+    }
 
-# 6. RIGHT - Quarterfinals
-with c6:
-    st.markdown('<div class="round-title">Quarterfinals</div>', unsafe_allow_html=True)
-    st.markdown('<div class="qf-top-spacer"></div>', unsafe_allow_html=True)
-    with st.container(border=True):
-        st.button("Hangman Page ⭐ 91.2", key="qf_r_1")
-        st.button("Kyle O'Reilly ⭐ 78.5", key="qf_r_2")
-    
-    st.markdown('<div class="qf-mid-spacer"></div>', unsafe_allow_html=True)
-    with st.container(border=True):
-        st.button("Jon Moxley ⭐ 89.3", key="qf_r_3")
-        st.button("Ricochet ⭐ 79.8", key="qf_r_4")
+    .matchup {
+        display: flex;
+        flex-direction: column;
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 6px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 2;
+    }
 
-# 7. RIGHT - Round of 16
-with c7:
-    st.markdown('<div class="round-title">Round of 16</div>', unsafe_allow_html=True)
-    r16_r = [
-        ("Darby Allin", "Hangman Adam Page"),
-        ("Kyle Fletcher", "Kyle O'Reilly"),
-        ("Katsuyori Shibata", "Jon Moxley"),
-        ("Daniel Garcia", "Ricochet")
-    ]
-    for idx, (p1, p2) in enumerate(r16_r):
-        with st.container(border=True):
-            st.button(p1, key=f"r16_r_{idx}_1")
-            st.button(p2, key=f"r16_r_{idx}_2")
-        if idx < 3:
-            st.markdown('<div style="height: 12px;"></div>', unsafe_allow_html=True)
+    .team {
+        padding: 8px 10px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #334155;
+        white-space: nowrap;
+    }
+
+    .team:last-child {
+        border-bottom: none;
+    }
+
+    .team.winner {
+        background: #1e3a8a;
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+    .rating {
+        color: #fbbf24;
+        font-size: 0.75rem;
+        margin-left: 6px;
+    }
+
+    /* CENTER FINALS CARD */
+    .finals-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex: 1.1;
+        height: 680px;
+    }
+
+    .finals-card {
+        background: #0f172a;
+        border: 2px solid #f59e0b;
+        border-radius: 10px;
+        padding: 16px;
+        width: 100%;
+        max-width: 200px;
+        text-align: center;
+        box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.2);
+    }
+
+    .finals-title {
+        color: #f59e0b;
+        font-size: 1.1rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .vs-text {
+        color: #ef4444;
+        font-weight: 800;
+        font-size: 0.85rem;
+        margin: 6px 0;
+    }
+
+    .champ-title {
+        color: #10b981;
+        font-size: 1rem;
+        font-weight: 800;
+        margin-top: 20px;
+        margin-bottom: 8px;
+    }
+
+    /* ESPN BRACKET BRANCH CONNECTORS */
+    .bracket-column {
+        position: relative;
+    }
+
+    /* Left side connectors */
+    .left-r16 .matchup::after {
+        content: "";
+        position: absolute;
+        right: -12px;
+        top: 50%;
+        width: 12px;
+        height: 2px;
+        background: #475569;
+    }
+
+    /* Right side connectors */
+    .right-r16 .matchup::before {
+        content: "";
+        position: absolute;
+        left: -12px;
+        top: 50%;
+        width: 12px;
+        height: 2px;
+        background: #475569;
+    }
+</style>
+</head>
+<body>
+
+<div class="bracket-container">
+    <!-- LEFT: ROUND OF 16 -->
+    <div class="column left-r16">
+        <div class="col-header">Round of 16</div>
+        <div class="matchup"><div class="team">Will Ospreay</div><div class="team">Christian Cage</div></div>
+        <div class="matchup"><div class="team">Orange Cassidy</div><div class="team">Bandido</div></div>
+        <div class="matchup"><div class="team">Hologram</div><div class="team">Claudio Castagnoli</div></div>
+        <div class="matchup"><div class="team">Wheeler Yuta</div><div class="team">Roderick Strong</div></div>
+    </div>
+
+    <!-- LEFT: QUARTERFINALS -->
+    <div class="column">
+        <div class="col-header">Quarterfinals</div>
+        <div class="matchup">
+            <div class="team winner">Will Ospreay <span class="rating">⭐ 97.5</span></div>
+            <div class="team">Bandido <span class="rating">⭐ 85.8</span></div>
+        </div>
+        <div class="matchup">
+            <div class="team">Claudio Castagnoli <span class="rating">⭐ 82.7</span></div>
+            <div class="team">Wheeler Yuta <span class="rating">⭐ 82.3</span></div>
+        </div>
+    </div>
+
+    <!-- LEFT: SEMIFINALS -->
+    <div class="column">
+        <div class="col-header">Semifinals</div>
+        <div class="matchup">
+            <div class="team">SF Slot 1</div>
+            <div class="team">SF Slot 2</div>
+        </div>
+    </div>
+
+    <!-- CENTER: FINALS & CHAMPION -->
+    <div class="finals-column">
+        <div class="finals-card">
+            <div class="finals-title">👑 FINALS 👑</div>
+            <div class="team" style="justify-content: center; background: #1e293b; border-radius: 4px;">Finalist 1</div>
+            <div class="vs-text">VS</div>
+            <div class="team" style="justify-content: center; background: #1e293b; border-radius: 4px;">Finalist 2</div>
+            
+            <div class="champ-title">🏆 CHAMPION 🏆</div>
+            <div class="team winner" style="justify-content: center; border-radius: 4px;">???</div>
+        </div>
+    </div>
+
+    <!-- RIGHT: SEMIFINALS -->
+    <div class="column">
+        <div class="col-header">Semifinals</div>
+        <div class="matchup">
+            <div class="team">SF Slot 1</div>
+            <div class="team">SF Slot 2</div>
+        </div>
+    </div>
+
+    <!-- RIGHT: QUARTERFINALS -->
+    <div class="column">
+        <div class="col-header">Quarterfinals</div>
+        <div class="matchup">
+            <div class="team">Hangman Adam Page <span class="rating">⭐ 91.2</span></div>
+            <div class="team">Kyle O'Reilly <span class="rating">⭐ 78.5</span></div>
+        </div>
+        <div class="matchup">
+            <div class="team">Jon Moxley <span class="rating">⭐ 89.3</span></div>
+            <div class="team">Ricochet <span class="rating">⭐ 79.8</span></div>
+        </div>
+    </div>
+
+    <!-- RIGHT: ROUND OF 16 -->
+    <div class="column right-r16">
+        <div class="col-header">Round of 16</div>
+        <div class="matchup"><div class="team">Darby Allin</div><div class="team">Hangman Adam Page</div></div>
+        <div class="matchup"><div class="team">Kyle Fletcher</div><div class="team">Kyle O'Reilly</div></div>
+        <div class="matchup"><div class="team">Katsuyori Shibata</div><div class="team">Jon Moxley</div></div>
+        <div class="matchup"><div class="team">Daniel Garcia</div><div class="team">Ricochet</div></div>
+    </div>
+</div>
+
+</body>
+</html>
+"""
+
+# Render embedded HTML bracket with 720px fixed height canvas
+components.html(espn_bracket_html, height=720, scrolling=True)
