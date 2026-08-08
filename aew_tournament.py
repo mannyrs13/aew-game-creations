@@ -25,8 +25,8 @@ with col_msg:
 
 st.markdown("---")
 
-# 2. Perfected SVG & HTML Tournament Bracket Component
-polished_bracket_html = """
+# 2. AEW Branded SVG & HTML Tournament Bracket Component
+aew_bracket_html = """
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,11 +35,11 @@ polished_bracket_html = """
         box-sizing: border-box;
         margin: 0;
         padding: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: 'Impact', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     
     body {
-        background-color: #0e1117;
+        background-color: #0b0e14;
         color: #ffffff;
         padding: 10px;
     }
@@ -50,6 +50,11 @@ polished_bracket_html = """
         max-width: 1280px;
         margin: 0 auto;
         height: 700px;
+        background: radial-gradient(circle at center, #1a1f2c 0%, #0b0e14 100%);
+        border: 2px solid #d4af37;
+        border-radius: 12px;
+        padding: 10px;
+        box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
     }
 
     /* SVG Overlay for Bracket Lines */
@@ -64,9 +69,10 @@ polished_bracket_html = """
     }
 
     .bracket-lines path {
-        stroke: #475569;
+        stroke: #d4af37;
         stroke-width: 2;
         fill: none;
+        opacity: 0.7;
     }
 
     /* Column Containers */
@@ -83,7 +89,7 @@ polished_bracket_html = """
         flex-direction: column;
         justify-content: space-around;
         width: 15.5%;
-        padding-top: 35px; /* Leave space for top column titles */
+        padding-top: 35px;
     }
 
     .col-finals {
@@ -95,37 +101,40 @@ polished_bracket_html = """
         padding-top: 35px;
     }
 
-    /* Clean, Spanned Column Headers */
+    /* AEW Column Headers */
     .col-header {
         position: absolute;
-        top: 0;
+        top: 6px;
         text-align: center;
-        font-size: 0.78rem;
-        font-weight: 800;
-        color: #9ca3af;
+        font-size: 0.9rem;
+        font-weight: 900;
+        color: #d4af37;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.12em;
         width: 100%;
+        text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
     }
 
-    /* Matchup Cards */
+    /* Matchup Cards - Dark Graphite Slate */
     .match-box {
-        background: #1e293b;
-        border: 1px solid #334155;
-        border-radius: 6px;
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-left: 3px solid #d4af37;
+        border-radius: 4px;
         padding: 2px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
     }
 
     .slot {
         padding: 6px 10px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         font-size: 0.82rem;
-        font-weight: 600;
-        color: #e2e8f0;
+        font-weight: 700;
+        color: #f0f6fc;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 1px solid #334155;
+        border-bottom: 1px solid #21262d;
         white-space: nowrap;
     }
 
@@ -133,57 +142,76 @@ polished_bracket_html = """
         border-bottom: none;
     }
 
+    /* Winner Slot: AEW Red Accent */
     .slot.winner {
-        background: #1e3a8a;
+        background: linear-gradient(90deg, #991b1b 0%, #161b22 100%);
         color: #ffffff;
-        font-weight: 700;
-        border-radius: 4px;
+        font-weight: 800;
+        border-left: 2px solid #ef4444;
     }
 
     .rating {
-        color: #fbbf24;
+        color: #ffd700;
         font-size: 0.75rem;
-        font-weight: 700;
+        font-weight: 800;
         margin-left: 6px;
     }
 
-    /* Finals Centerpiece */
+    /* Finals Centerpiece - AEW World Title Gold Theme */
     .finals-card {
-        background: #0f172a;
-        border: 2px solid #f59e0b;
+        background: radial-gradient(circle, #21262d 0%, #0d1117 100%);
+        border: 2px solid #ffd700;
         border-radius: 10px;
-        padding: 14px;
+        padding: 16px;
         width: 100%;
         text-align: center;
-        box-shadow: 0 8px 16px rgba(245, 158, 11, 0.15);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
     }
 
-    .finals-title { color: #f59e0b; font-size: 1.05rem; font-weight: 800; margin-bottom: 8px; }
-    .vs-text { color: #ef4444; font-weight: 800; font-size: 0.85rem; margin: 6px 0; }
-    .champ-title { color: #10b981; font-size: 1rem; font-weight: 800; margin-top: 16px; margin-bottom: 8px; }
+    .finals-title { 
+        color: #ffd700; 
+        font-size: 1.2rem; 
+        font-weight: 900; 
+        margin-bottom: 8px;
+        letter-spacing: 0.1em;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+    }
+    
+    .vs-text { 
+        color: #ef4444; 
+        font-weight: 900; 
+        font-size: 0.95rem; 
+        margin: 6px 0; 
+        letter-spacing: 0.15em;
+    }
+    
+    .champ-title { 
+        color: #10b981; 
+        font-size: 1.1rem; 
+        font-weight: 900; 
+        margin-top: 16px; 
+        margin-bottom: 8px;
+        letter-spacing: 0.08em;
+    }
 </style>
 </head>
 <body>
 
 <div class="bracket-wrapper">
-    <!-- SVG CONNECTING LINES (Clean coordinate mapping) -->
+    <!-- SVG CONNECTING LINES (AEW Metallic Gold) -->
     <svg class="bracket-lines" viewBox="0 0 1200 700" preserveAspectRatio="none">
         <!-- LEFT SIDE BRANCHES -->
-        <!-- R16 to QF -->
         <path d="M 185,90 H 215 V 170 H 185 M 215,130 H 245" />
         <path d="M 185,250 H 215 V 330 H 185 M 215,290 H 245" />
         <path d="M 185,410 H 215 V 490 H 185 M 215,450 H 245" />
         <path d="M 185,570 H 215 V 650 H 185 M 215,610 H 245" />
 
-        <!-- QF to SF -->
         <path d="M 430,130 H 460 V 290 H 430 M 460,210 H 490" />
         <path d="M 430,450 H 460 V 610 H 430 M 460,530 H 490" />
 
-        <!-- SF to FINALS -->
         <path d="M 675,210 H 705 V 530 H 675 M 705,370 H 735" />
 
         <!-- RIGHT SIDE BRANCHES -->
-        <!-- SF to FINALS -->
         <path d="M 1015,90 H 985 V 170 H 1015 M 985,130 H 955" />
         <path d="M 1015,250 H 985 V 330 H 1015 M 985,290 H 955" />
         <path d="M 1015,410 H 985 V 490 H 1015 M 985,450 H 955" />
@@ -193,7 +221,7 @@ polished_bracket_html = """
     <!-- BRACKET CONTENT GRID -->
     <div class="bracket-grid">
         <!-- LEFT: R16 -->
-        <div class="col" style="position: relative;">
+        <div class="col">
             <div class="col-header">Round of 16</div>
             <div class="match-box"><div class="slot">Will Ospreay</div><div class="slot">Christian Cage</div></div>
             <div class="match-box"><div class="slot">Orange Cassidy</div><div class="slot">Bandido</div></div>
@@ -202,7 +230,7 @@ polished_bracket_html = """
         </div>
 
         <!-- LEFT: QF -->
-        <div class="col" style="position: relative;">
+        <div class="col">
             <div class="col-header">Quarterfinals</div>
             <div class="match-box">
                 <div class="slot winner">Will Ospreay <span class="rating">⭐ 97.5</span></div>
@@ -215,7 +243,7 @@ polished_bracket_html = """
         </div>
 
         <!-- LEFT: SF -->
-        <div class="col" style="position: relative;">
+        <div class="col">
             <div class="col-header">Semifinals</div>
             <div class="match-box">
                 <div class="slot">SF Slot 1</div>
@@ -224,13 +252,13 @@ polished_bracket_html = """
         </div>
 
         <!-- CENTER: FINALS -->
-        <div class="col-finals" style="position: relative;">
+        <div class="col-finals">
             <div class="col-header">Finals</div>
             <div class="finals-card">
                 <div class="finals-title">👑 FINALS 👑</div>
-                <div class="slot" style="justify-content: center; background: #1e293b; border-radius: 4px;">Finalist 1</div>
+                <div class="slot" style="justify-content: center; background: #161b22; border-radius: 4px;">Finalist 1</div>
                 <div class="vs-text">VS</div>
-                <div class="slot" style="justify-content: center; background: #1e293b; border-radius: 4px;">Finalist 2</div>
+                <div class="slot" style="justify-content: center; background: #161b22; border-radius: 4px;">Finalist 2</div>
                 
                 <div class="champ-title">🏆 CHAMPION 🏆</div>
                 <div class="slot winner" style="justify-content: center; border-radius: 4px;">???</div>
@@ -238,7 +266,7 @@ polished_bracket_html = """
         </div>
 
         <!-- RIGHT: SF -->
-        <div class="col" style="position: relative;">
+        <div class="col">
             <div class="col-header">Semifinals</div>
             <div class="match-box">
                 <div class="slot">SF Slot 1</div>
@@ -247,7 +275,7 @@ polished_bracket_html = """
         </div>
 
         <!-- RIGHT: QF -->
-        <div class="col" style="position: relative;">
+        <div class="col">
             <div class="col-header">Quarterfinals</div>
             <div class="match-box">
                 <div class="slot">Hangman Page <span class="rating">⭐ 91.2</span></div>
@@ -260,7 +288,7 @@ polished_bracket_html = """
         </div>
 
         <!-- RIGHT: R16 -->
-        <div class="col" style="position: relative;">
+        <div class="col">
             <div class="col-header">Round of 16</div>
             <div class="match-box"><div class="slot">Darby Allin</div><div class="slot">Hangman Page</div></div>
             <div class="match-box"><div class="slot">Kyle Fletcher</div><div class="slot">Kyle O'Reilly</div></div>
@@ -275,4 +303,4 @@ polished_bracket_html = """
 """
 
 # Render embedded HTML bracket with 720px fixed height canvas
-components.html(polished_bracket_html, height=720, scrolling=True)
+components.html(aew_bracket_html, height=720, scrolling=True)
