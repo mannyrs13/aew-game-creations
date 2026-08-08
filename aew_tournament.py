@@ -1,7 +1,14 @@
 import streamlit as st
 import random
+from streamlit_local_storage import LocalStorage
 
-st.set_page_config(page_title="AEW Tournament Generator", page_icon="🏆", layout="wide")
+st.set_page_config(page_title="AEW 16-Man Tournament GM", page_icon="🏆", layout="wide")
+
+# Initialize Local Storage
+localS = LocalStorage()
+
+# Retrieve the saved Personal Best (if it exists)
+personal_best = localS.getItem("aew_tourney_pb")
 
 # --- ACCURATE AUGUST 2026 MALE AEW ROSTER ---
 MENS_ROSTER = [
@@ -186,22 +193,45 @@ def handle_click(stage, idx):
                 st.session_state.score_finals = calc_match_score(p1, p2)
 
 # --- UI RENDERING ---
-st.title("AEW 16-Man Tournament Generator")
+st.title("AEW 16-Man Tournament GM")
+
+# Display Personal Best in the Sidebar
+with st.sidebar:
+    st.header("🎮 Your GM Stats")
+    if personal_best:
+        try:
+            st.metric(label="🏆 Best Tournament Grade", value=f"{float(personal_best):.1f} / 100")
+        except ValueError:
+            st.metric(label="🏆 Best Tournament Grade", value="No completed tournaments yet")
+    else:
+        st.metric(label="🏆 Best Tournament Grade", value="No completed tournaments yet")
+    st.markdown("*(Your score is saved privately on this device)*")
+
+st.markdown("---")
 
 ctrl1, ctrl2 = st.columns([1, 3])
 with ctrl1:
-    if st.button("🚨 NEW TOURNAMENT", use_container_width=True):
+    if st.button("🚨 NEW TOURNAMENT", use_container_width=True, type="primary"):
         reset_tournament()
         st.rerun()
 with ctrl2:
     if st.session_state.champion:
         all_scores = st.session_state.scores_r16 + st.session_state.scores_qf + st.session_state.scores_sf + [st.session_state.score_finals]
         avg_score = sum(all_scores) / len(all_scores)
-        st.success(f"🏆 {st.session_state.champion.upper()} WINS THE TOURNAMENT! (Final Grade: {avg_score:.1f} / 100) 🏆")
+        
+        # Local Storage High Score Logic
+        if not personal_best or avg_score > float(personal_best):
+            localS.setItem("aew_tourney_pb", avg_score)
+            st.balloons()
+            st.success(f"🎉 NEW PERSONAL BEST! {st.session_state.champion.upper()} WINS! (Final Grade: {avg_score:.1f} / 100) 🎉")
+        else:
+            st.success(f"🏆 {st.session_state.champion.upper()} WINS THE TOURNAMENT! (Final Grade: {avg_score:.1f} / 100) 🏆")
+            
     elif st.session_state.draft_complete:
         st.info("DRAFT COMPLETE! Click on match participants to advance winners.")
     elif st.session_state.current_draw:
-        st.warning(f"**ON THE CLOCK:** {st.session_state.current_draw} (Click an empty R16 slot to place)")
+        # IMPLEMENTED THE AEW GOLD TEXT UPGRADE HERE
+        st.warning(f"**ON THE CLOCK:** :color[{st.session_state.current_draw}]{{foreground='#E0B700'}} (Click an empty R16 slot to place)")
 
 st.markdown("---")
 
