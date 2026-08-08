@@ -8,61 +8,139 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. Custom CSS to style buttons, center the bracket, and draw connector lines
+# 2. Custom CSS for a true tournament bracket layout
 st.markdown("""
     <style>
-    /* Center container and fix spacing */
+    /* Global Container Padding */
     .main .block-container {
         padding-top: 1.5rem;
         padding-bottom: 2rem;
-        max-width: 95%;
+        max-width: 98%;
     }
 
-    /* Button styling for clean look and no wrapping */
-    div.stButton > button {
-        width: 100% !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        border-radius: 6px !important;
-        font-weight: 600 !important;
-        padding: 0.35rem 0.5rem !important;
-        font-size: 0.85rem !important;
-    }
-
-    /* Bracket line connectors styling */
-    .line-top {
-        border-top: 2px solid #555;
-        border-right: 2px solid #555;
-        height: 50px;
-        margin-right: -10px;
-    }
-    .line-bottom {
-        border-bottom: 2px solid #555;
-        border-right: 2px solid #555;
-        height: 50px;
-        margin-right: -10px;
-    }
-    .line-connector {
-        border-top: 2px solid #555;
-        height: 2px;
+    /* Bracket Container Layout using Flexbox */
+    .bracket-wrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: stretch;
         width: 100%;
-        margin-top: 25px;
+        margin-top: 1rem;
+        font-family: system-ui, -apple-system, sans-serif;
     }
 
-    /* Headers */
+    /* Individual Bracket Column */
+    .bracket-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        flex: 1;
+        min-width: 130px;
+        margin: 0 4px;
+    }
+
+    /* Column Headers */
     .bracket-header {
         text-align: center;
-        font-weight: bold;
-        font-size: 1.1rem;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #9CA3AF;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
         margin-bottom: 1rem;
-        color: #d1d5db;
+        height: 24px;
     }
-    .center-header {
-        text-align: center;
-        color: #FFD700;
+
+    /* Matchup Pair Box */
+    .matchup {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        margin: 6px 0;
+    }
+
+    /* Team / Wrestler Slot */
+    .slot {
+        background-color: #1E293B;
+        color: #F8FAFC;
+        border: 1px solid #334155;
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-size: 0.82rem;
+        font-weight: 600;
         white-space: nowrap;
-        font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        margin: 2px 0;
+        text-align: center;
+    }
+
+    .slot.winner {
+        border-color: #3B82F6;
+        background-color: #1E3A8A;
+        color: #FFFFFF;
+    }
+
+    .slot.rating {
+        color: #FBBF24;
+    }
+
+    /* Center Finals Styling */
+    .finals-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .finals-title {
+        color: #F59E0B;
+        font-weight: 800;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .vs-badge {
+        font-weight: 800;
+        color: #EF4444;
+        margin: 4px 0;
+        font-size: 0.9rem;
+    }
+
+    .champion-title {
+        color: #10B981;
+        font-weight: 800;
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Connectors using CSS Pseudo-elements */
+    .bracket-column.left .matchup::after {
+        content: "";
+        position: absolute;
+        right: -8px;
+        top: 25%;
+        bottom: 25%;
+        width: 8px;
+        border-right: 2px solid #475569;
+        border-top: 2px solid #475569;
+        border-bottom: 2px solid #475569;
+    }
+
+    .bracket-column.right .matchup::after {
+        content: "";
+        position: absolute;
+        left: -8px;
+        top: 25%;
+        bottom: 25%;
+        width: 8px;
+        border-left: 2px solid #475569;
+        border-top: 2px solid #475569;
+        border-bottom: 2px solid #475569;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -74,7 +152,7 @@ with st.sidebar:
     st.caption("*(Your score is saved privately on this device)*")
     st.button("Share")
 
-# --- TOP NAVIGATION ---
+# --- TOP BAR ---
 col_btn, col_msg = st.columns([1.5, 4])
 with col_btn:
     st.button("🚨 NEW TOURNAMENT", type="primary")
@@ -83,109 +161,64 @@ with col_msg:
 
 st.markdown("---")
 
-# --- BRACKET GRID (9 Columns for Left, Center, Right + Connector Lines) ---
-# R16 -> Connector -> QF -> SF -> CENTER -> SF -> QF -> Connector -> R16
-cols = st.columns([1.3, 0.2, 1.3, 1.2, 1.5, 1.2, 1.3, 0.2, 1.3])
+# --- CLEAN HTML/CSS BRACKET RENDER ---
+html_bracket = """
+<div class="bracket-wrapper">
+    <!-- LEFT SIDE: Round of 16 -->
+    <div class="bracket-column left">
+        <div class="bracket-header">Round of 16</div>
+        <div class="matchup"><div class="slot">Will Ospreay</div><div class="slot">Christian Cage</div></div>
+        <div class="matchup"><div class="slot">Orange Cassidy</div><div class="slot">Bandido</div></div>
+        <div class="matchup"><div class="slot">Hologram</div><div class="slot">Claudio Castagnoli</div></div>
+        <div class="matchup"><div class="slot">Wheeler Yuta</div><div class="slot">Roderick Strong</div></div>
+    </div>
 
-# --- LEFT SIDE BRACKET ---
-with cols[0]:
-    st.markdown('<div class="bracket-header">Round of 16</div>', unsafe_allow_html=True)
-    r16_left = [
-        "Will Ospreay", "Christian Cage", 
-        "Orange Cassidy", "Bandido",
-        "Hologram", "Claudio Castagnoli", 
-        "Wheeler Yuta", "Roderick Strong"
-    ]
-    for i, p in enumerate(r16_left):
-        st.button(p, key=f"r16_l_{i}")
-        if i % 2 == 0:
-            st.write("")  # Tight pairing gap
+    <!-- LEFT SIDE: Quarterfinals -->
+    <div class="bracket-column left">
+        <div class="bracket-header">Quarterfinal</div>
+        <div class="matchup"><div class="slot winner">Will Ospreay <span class="rating">⭐ 97.5</span></div><div class="slot">Bandido <span class="rating">⭐ 85.8</span></div></div>
+        <div class="matchup"><div class="slot">Claudio Castagnoli <span class="rating">⭐ 82.7</span></div><div class="slot">Wheeler Yuta <span class="rating">⭐ 82.3</span></div></div>
+    </div>
 
-# Left Connectors
-with cols[1]:
-    st.write("")
-    st.write("")
-    st.markdown('<div class="line-top"></div><div class="line-bottom"></div>', unsafe_allow_html=True)
-    st.write("")
-    st.markdown('<div class="line-top"></div><div class="line-bottom"></div>', unsafe_allow_html=True)
+    <!-- LEFT SIDE: Semifinals -->
+    <div class="bracket-column left">
+        <div class="bracket-header">Semifinals</div>
+        <div class="matchup"><div class="slot">SF Slot 1</div><div class="slot">SF Slot 2</div></div>
+    </div>
 
-with cols[2]:
-    st.markdown('<div class="bracket-header">Quarterfinals</div>', unsafe_allow_html=True)
-    st.write("")
-    qf_left = [
-        "Will Ospreay (⭐ 97.5)", "Bandido (⭐ 85.8)",
-        "Claudio Castagnoli (⭐ 82.7)", "Wheeler Yuta (⭐ 82.3)"
-    ]
-    for i, p in enumerate(qf_left):
-        st.button(p, key=f"qf_l_{i}")
-        st.write("")
-        st.write("")
+    <!-- CENTER: FINALS & CHAMPION -->
+    <div class="bracket-column finals-box">
+        <div class="finals-title">👑 FINALS 👑</div>
+        <div class="slot" style="min-width: 140px;">Finalist 1</div>
+        <div class="vs-badge">VS</div>
+        <div class="slot" style="min-width: 140px;">Finalist 2</div>
+        
+        <div class="champion-title">🏆 CHAMPION 🏆</div>
+        <div class="slot winner" style="min-width: 140px;">???</div>
+    </div>
 
-with cols[3]:
-    st.markdown('<div class="bracket-header">Semifinals</div>', unsafe_allow_html=True)
-    st.write("")
-    st.write("")
-    st.write("")
-    st.button("SF Slot 1", key="sf_l_1")
-    st.write("")
-    st.write("")
-    st.write("")
-    st.write("")
-    st.button("SF Slot 2", key="sf_l_2")
+    <!-- RIGHT SIDE: Semifinals -->
+    <div class="bracket-column right">
+        <div class="bracket-header">Semifinals</div>
+        <div class="matchup"><div class="slot">SF Slot 1</div><div class="slot">SF Slot 2</div></div>
+    </div>
 
-# --- CENTER / FINALS ---
-with cols[4]:
-    st.markdown('<div class="center-header" style="font-size: 1.4rem;">👑 FINALS 👑</div>', unsafe_allow_html=True)
-    st.write("")
-    st.button("Finalist 1", key="finalist_1")
-    st.markdown('<div class="center-header" style="margin: 0.5rem 0;">VS</div>', unsafe_allow_html=True)
-    st.button("Finalist 2", key="finalist_2")
-    
-    st.markdown('<div class="center-header" style="font-size: 1.2rem; margin-top: 1.5rem;">👑 CHAMPION 👑</div>', unsafe_allow_html=True)
-    st.button("???", key="champion_slot")
+    <!-- RIGHT SIDE: Quarterfinals -->
+    <div class="bracket-column right">
+        <div class="bracket-header">Quarterfinal</div>
+        <div class="matchup"><div class="slot">Hangman Adam Page <span class="rating">⭐ 91.2</span></div><div class="slot">Kyle O'Reilly <span class="rating">⭐ 78.5</span></div></div>
+        <div class="matchup"><div class="slot">Jon Moxley <span class="rating">⭐ 89.3</span></div><div class="slot">Ricochet <span class="rating">⭐ 79.8</span></div></div>
+    </div>
 
-# --- RIGHT SIDE BRACKET ---
-with cols[5]:
-    st.markdown('<div class="bracket-header">Semifinals</div>', unsafe_allow_html=True)
-    st.write("")
-    st.write("")
-    st.write("")
-    st.button("SF Slot 1", key="sf_r_1")
-    st.write("")
-    st.write("")
-    st.write("")
-    st.write("")
-    st.button("SF Slot 2", key="sf_r_2")
+    <!-- RIGHT SIDE: Round of 16 -->
+    <div class="bracket-column right">
+        <div class="bracket-header">Round of 16</div>
+        <div class="matchup"><div class="slot">Darby Allin</div><div class="slot">Hangman Adam Page</div></div>
+        <div class="matchup"><div class="slot">Kyle Fletcher</div><div class="slot">Kyle O'Reilly</div></div>
+        <div class="matchup"><div class="slot">Katsuyori Shibata</div><div class="slot">Jon Moxley</div></div>
+        <div class="matchup"><div class="slot">Daniel Garcia</div><div class="slot">Ricochet</div></div>
+    </div>
+</div>
+"""
 
-with cols[6]:
-    st.markdown('<div class="bracket-header">Quarterfinals</div>', unsafe_allow_html=True)
-    st.write("")
-    qf_right = [
-        "Hangman Adam Page (⭐ 91.2)", "Kyle O'Reilly (⭐ 78.5)",
-        "Jon Moxley (⭐ 89.3)", "Ricochet (⭐ 79.8)"
-    ]
-    for i, p in enumerate(qf_right):
-        st.button(p, key=f"qf_r_{i}")
-        st.write("")
-        st.write("")
-
-# Right Connectors
-with cols[7]:
-    st.write("")
-    st.write("")
-    st.markdown('<div class="line-top" style="transform: scaleX(-1);"></div><div class="line-bottom" style="transform: scaleX(-1);"></div>', unsafe_allow_html=True)
-    st.write("")
-    st.markdown('<div class="line-top" style="transform: scaleX(-1);"></div><div class="line-bottom" style="transform: scaleX(-1);"></div>', unsafe_allow_html=True)
-
-with cols[8]:
-    st.markdown('<div class="bracket-header">Round of 16</div>', unsafe_allow_html=True)
-    r16_right = [
-        "Darby Allin", "Hangman Adam Page", 
-        "Kyle Fletcher", "Kyle O'Reilly",
-        "Katsuyori Shibata", "Jon Moxley", 
-        "Daniel Garcia", "Ricochet"
-    ]
-    for i, p in enumerate(r16_right):
-        st.button(p, key=f"r16_r_{i}")
-        if i % 2 == 0:
-            st.write("")
+st.markdown(html_bracket, unsafe_allow_html=True)
