@@ -25,7 +25,7 @@ with col_msg:
 
 st.markdown("---")
 
-# 2. Pure HTML/CSS ESPN Bracket Component
+# 2. Complete ESPN Bracket HTML/CSS Component
 espn_bracket_html = """
 <!DOCTYPE html>
 <html>
@@ -55,13 +55,21 @@ espn_bracket_html = """
         margin: 0 auto;
     }
 
+    /* Standard inner column styling - centered with gaps */
     .column {
         display: flex;
         flex-direction: column;
-        justify-content: space-around;
+        justify-content: center;
+        gap: 36px;
         flex: 1;
         height: 680px;
-        padding: 0 5px;
+        padding: 0 6px;
+    }
+
+    /* Outer Round of 16 columns - spread across full height */
+    .column.r16-col {
+        justify-content: space-around;
+        gap: 0;
     }
 
     .col-header {
@@ -110,7 +118,7 @@ espn_bracket_html = """
     .rating {
         color: #fbbf24;
         font-size: 0.75rem;
-        margin-left: 6px;
+        margin-left: 8px;
     }
 
     /* CENTER FINALS CARD */
@@ -129,7 +137,7 @@ espn_bracket_html = """
         border-radius: 10px;
         padding: 16px;
         width: 100%;
-        max-width: 200px;
+        max-width: 210px;
         text-align: center;
         box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.2);
     }
@@ -157,12 +165,7 @@ espn_bracket_html = """
     }
 
     /* ESPN BRACKET BRANCH CONNECTORS */
-    .bracket-column {
-        position: relative;
-    }
-
-    /* Left side connectors */
-    .left-r16 .matchup::after {
+    .r16-col .matchup::after {
         content: "";
         position: absolute;
         right: -12px;
@@ -172,15 +175,9 @@ espn_bracket_html = """
         background: #475569;
     }
 
-    /* Right side connectors */
-    .right-r16 .matchup::before {
-        content: "";
-        position: absolute;
+    .r16-col.right .matchup::after {
         left: -12px;
-        top: 50%;
-        width: 12px;
-        height: 2px;
-        background: #475569;
+        right: auto;
     }
 </style>
 </head>
@@ -188,7 +185,7 @@ espn_bracket_html = """
 
 <div class="bracket-container">
     <!-- LEFT: ROUND OF 16 -->
-    <div class="column left-r16">
+    <div class="column r16-col">
         <div class="col-header">Round of 16</div>
         <div class="matchup"><div class="team">Will Ospreay</div><div class="team">Christian Cage</div></div>
         <div class="matchup"><div class="team">Orange Cassidy</div><div class="team">Bandido</div></div>
@@ -254,7 +251,7 @@ espn_bracket_html = """
     </div>
 
     <!-- RIGHT: ROUND OF 16 -->
-    <div class="column right-r16">
+    <div class="column r16-col right">
         <div class="col-header">Round of 16</div>
         <div class="matchup"><div class="team">Darby Allin</div><div class="team">Hangman Adam Page</div></div>
         <div class="matchup"><div class="team">Kyle Fletcher</div><div class="team">Kyle O'Reilly</div></div>
