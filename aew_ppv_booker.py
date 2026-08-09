@@ -9,13 +9,14 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. Authentic AEW Theme & CSS Styling
+# 2. Enhanced CSS Styling with Clean Spacing & Slot Rules
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
 
+    /* Added clean top padding so headers never get cut off */
     .block-container {
-        padding-top: 2rem !important;
+        padding-top: 3.5rem !important;
         padding-bottom: 2rem !important;
         max-width: 98% !important;
     }
@@ -27,11 +28,12 @@ st.markdown("""
     /* AEW Main Header */
     .aew-main-title {
         text-align: center;
-        font-size: 2.6rem;
+        font-size: 2.5rem;
         font-weight: 900;
         color: #ffd700;
         text-transform: uppercase;
         letter-spacing: 0.12em;
+        margin-top: 10px !important;
         margin-bottom: 0.8rem;
         font-family: 'Impact', 'Montserrat', sans-serif;
         text-shadow: 0 0 16px rgba(255, 215, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.2);
@@ -42,11 +44,11 @@ st.markdown("""
         background: linear-gradient(90deg, #161b22 0%, #21262d 50%, #161b22 100%);
         border: 2px solid #ffd700;
         border-radius: 8px;
-        padding: 12px 20px;
+        padding: 10px 18px;
         text-align: center;
         font-family: 'Montserrat', sans-serif;
         box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
 
     .clock-text {
@@ -60,11 +62,11 @@ st.markdown("""
     .clock-sub {
         color: #ef4444;
         font-weight: 800;
-        font-size: 0.9rem;
+        font-size: 0.88rem;
         margin-left: 10px;
     }
 
-    /* Interactive "Place Here" Buttons */
+    /* Active Valid Buttons (Red to Gold Hover) */
     div.stButton > button {
         width: 100% !important;
         background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
@@ -73,9 +75,9 @@ st.markdown("""
         border-radius: 5px !important;
         padding: 0.5rem 0.2rem !important;
         font-weight: 900 !important;
-        font-size: 0.85rem !important;
+        font-size: 0.82rem !important;
         font-family: 'Montserrat', sans-serif !important;
-        letter-spacing: 0.05em !important;
+        letter-spacing: 0.04em !important;
         text-transform: uppercase !important;
         box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
         transition: all 0.15s ease-in-out !important;
@@ -87,6 +89,15 @@ st.markdown("""
         border-color: #ffe566 !important;
         box-shadow: 0 0 15px rgba(255, 215, 0, 0.5) !important;
         transform: scale(1.02);
+    }
+
+    /* Disabled / Invalid Division Buttons */
+    div.stButton > button:disabled {
+        background: #1e2430 !important;
+        color: #64748b !important;
+        border: 1px solid #334155 !important;
+        opacity: 0.6 !important;
+        font-weight: 800 !important;
     }
 
     /* Filled Match Slot Card */
@@ -109,13 +120,13 @@ st.markdown("""
         border: 1px solid #21262d !important;
         border-left: 3px solid #ffd700 !important;
         border-radius: 8px !important;
-        padding: 12px !important;
+        padding: 10px 14px !important;
         margin-bottom: 12px !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# 3. Roster & Categories
+# 3. Roster Database with Division Categories
 ROSTER = [
     {"name": "Penelope Ford", "type": "Womens Singles"},
     {"name": "Red Velvet", "type": "Womens Singles"},
@@ -127,6 +138,7 @@ ROSTER = [
     {"name": "Orange Cassidy", "type": "Mens Singles"},
     {"name": "Claudio Castagnoli", "type": "Mens Singles"},
     {"name": "Darby Allin", "type": "Mens Singles"},
+    {"name": "Wheeler Yuta", "type": "Mens Singles"},
 ]
 
 # Initialize Session State
@@ -141,24 +153,22 @@ if "current_talent" not in st.session_state or st.session_state.current_talent i
     if st.session_state.pool:
         st.session_state.current_talent = st.session_state.pool.pop(0)
 
-# --- AUTO-DRAW & PLACEMENT LOGIC ---
+# Auto-Draw & Placement Logic
 def place_talent_and_autodraw(slot_key):
     if st.session_state.current_talent:
-        # 1. Place wrestler into target slot
         st.session_state.placed_slots[slot_key] = st.session_state.current_talent["name"]
         
-        # 2. AUTO-DRAW: Automatically set the next wrestler on the clock
         if st.session_state.pool:
             st.session_state.current_talent = st.session_state.pool.pop(0)
         else:
-            st.session_state.current_talent = None  # Draft Complete
+            st.session_state.current_talent = None
             
         st.rerun()
 
 # --- HEADER SECTION ---
 st.markdown('<div class="aew-main-title">🏟️ AEW WRESTLEDREAM GM BOOKER</div>', unsafe_allow_html=True)
 
-col_top1, col_top2 = st.columns([1, 4])
+col_top1, col_top2 = st.columns([1.5, 4])
 with col_top1:
     if st.button("🚨 NEW CARD", type="primary"):
         st.session_state.placed_slots = {}
@@ -174,7 +184,7 @@ with col_top2:
         st.markdown(f"""
             <div class="clock-banner">
                 <span class="clock-text">ON THE CLOCK: <span style="color:#ffffff;">{talent_name}</span></span>
-                <span class="clock-sub">| TYPE: {talent_type} (Click an empty slot to place)</span>
+                <span class="clock-sub">| DIVISION: <span style="color:#ffd700;">{talent_type.upper()}</span></span>
             </div>
         """, unsafe_allow_html=True)
     else:
@@ -184,18 +194,20 @@ with col_top2:
             </div>
         """, unsafe_allow_html=True)
 
-# --- MATCH CARD ---
+# --- MATCH CARD WITH DIVISION VALIDATION ---
 matches = [
-    ("Match 1: AEW Continental Championship", ["m1_s1", "m1_s2"]),
-    ("Match 2: AEW World Trios Championship", ["m2_s1", "m2_s2"]),
-    ("Match 3: AEW TBS Championship", ["m3_s1", "m3_s2"]),
-    ("Match 4: AEW Women's World Championship (Triple Threat)", ["m4_s1", "m4_s2", "m4_s3"]),
-    ("Match 5: AEW World Championship", ["m5_s1", "m5_s2"]),
+    ("Match 1: AEW Continental Championship", ["m1_s1", "m1_s2"], "Mens Singles"),
+    ("Match 2: AEW World Trios Championship", ["m2_s1", "m2_s2"], "Mens Singles"),
+    ("Match 3: AEW TBS Championship", ["m3_s1", "m3_s2"], "Womens Singles"),
+    ("Match 4: AEW Women's World Championship (Triple Threat)", ["m4_s1", "m4_s2", "m4_s3"], "Womens Singles"),
+    ("Match 5: AEW World Championship", ["m5_s1", "m5_s2"], "Mens Singles"),
 ]
 
-for match_title, slots in matches:
+curr_talent = st.session_state.current_talent
+
+for match_title, slots, match_type in matches:
     with st.container(border=True):
-        st.markdown(f"<h4 style='color: #ffd700; margin-bottom: 8px;'>{match_title}</h4>", unsafe_allow_html=True)
+        st.markdown(f"<h4 style='color: #ffd700; margin-bottom: 6px; font-size: 1.1rem;'>{match_title} <span style='font-size: 0.8rem; color: #8b949e;'>({match_type})</span></h4>", unsafe_allow_html=True)
         cols = st.columns(len(slots))
         for idx, slot_key in enumerate(slots):
             with cols[idx]:
@@ -204,6 +216,10 @@ for match_title, slots in matches:
                     wrestler = st.session_state.placed_slots[slot_key]
                     st.markdown(f'<div class="placed-slot">✅ {wrestler}</div>', unsafe_allow_html=True)
                 else:
-                    # Show active "Place Here" button
-                    if st.button("PLACE HERE", key=f"btn_{slot_key}", disabled=(st.session_state.current_talent is None)):
+                    # Check gender/type compatibility rule
+                    is_valid = (curr_talent is not None) and (curr_talent["type"] == match_type)
+                    
+                    btn_text = "PLACE HERE" if is_valid else f"⛔ {match_type.split()[0].upper()} ONLY"
+                    
+                    if st.button(btn_text, key=f"btn_{slot_key}", disabled=not is_valid):
                         place_talent_and_autodraw(slot_key)
