@@ -14,7 +14,6 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
 
-    /* Remove default whitespace & set textured radial background */
     .block-container {
         padding-top: 1.5rem !important;
         padding-bottom: 1.5rem !important;
@@ -25,7 +24,6 @@ st.markdown("""
         background: radial-gradient(circle at center, #181d28 0%, #080a0e 100%) !important;
     }
 
-    /* Main Big AEW Gold Header */
     .aew-main-title {
         text-align: center;
         font-size: 2.5rem;
@@ -51,7 +49,6 @@ st.markdown("""
         text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
     }
 
-    /* Primary Draft Buttons ("Place Here" / Active Wrestlers) */
     div.stButton > button {
         width: 100% !important;
         background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%) !important;
@@ -79,7 +76,6 @@ st.markdown("""
         transform: scale(1.02);
     }
 
-    /* Filled / Placed Wrestler Cards */
     div.stButton > button:disabled {
         background: linear-gradient(180deg, #1e2430 0%, #121620 100%) !important;
         color: #f1f5f9 !important;
@@ -92,7 +88,6 @@ st.markdown("""
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
     }
 
-    /* Champion Center Highlight Card */
     .champ-container div.stButton > button:disabled {
         background: radial-gradient(circle, #2a220a 0%, #0d1117 100%) !important;
         border: 2px solid #ffd700 !important;
@@ -103,7 +98,6 @@ st.markdown("""
         box-shadow: 0 0 20px rgba(255, 215, 0, 0.4) !important;
     }
 
-    /* Vertical Spacers */
     .qf-spacer { height: 35px; }
     .qf-gap { height: 62px; }
     .sf-spacer { height: 95px; }
@@ -139,13 +133,18 @@ drafted_count = sum(1 for k in st.session_state.slots.keys() if k.startswith("r1
 draft_complete = (drafted_count >= 16)
 current_wrestler = st.session_state.roster[drafted_count] if not draft_complete else None
 
-# Match Grade Calculator
-def calc_match_score(p1, p2, round_mult=1.0):
-    if p1 in RATINGS and p2 in RATINGS:
+# Match Grade Calculator & Pop-Up Trigger
+def trigger_match_score(p1, p2, round_name="Match", round_mult=1.0):
+    if p1 in RATINGS and p2 in RATINGS and p1 != "QF Slot" and p2 != "QF Slot":
         base = (RATINGS[p1] + RATINGS[p2]) / 2.0
         penalty = abs(RATINGS[p1] - RATINGS[p2]) * 0.25
-        return round(min((base - penalty) * round_mult, 100.0), 1)
-    return 82.0
+        score = round(min((base - penalty) * round_mult, 100.0), 1)
+        st.session_state.match_scores.append(score)
+        
+        # POP-UP NOTIFICATION FOR MATCH RATING
+        st.toast(f"🔥 {round_name}: {p1} vs {p2}\n⭐ Match Rating: {score}/100", icon="⭐")
+    else:
+        st.toast(f"✨ Winner Advanced: {p1}!", icon="🏆")
 
 if st.session_state.match_scores:
     current_avg = round(sum(st.session_state.match_scores) / len(st.session_state.match_scores), 1)
@@ -176,7 +175,6 @@ with nav_c3:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Helper function for slot placement
 def handle_r16_draft(key):
     if key not in st.session_state.slots and not draft_complete:
         st.session_state.slots[key] = current_wrestler
@@ -196,8 +194,7 @@ with c1:
             else:
                 st.session_state.slots[f"qf_l_{i//2}"] = label
                 p_opp = st.session_state.slots.get(f"r16_l_{i^1}", "")
-                if p_opp:
-                    st.session_state.match_scores.append(calc_match_score(label, p_opp, 0.95))
+                trigger_match_score(label, p_opp, round_name="Round of 16", round_mult=0.95)
                 st.rerun()
         if i % 2 == 1 and i < 7:
             st.markdown('<div style="height: 16px;"></div>', unsafe_allow_html=True)
@@ -211,6 +208,7 @@ with c2:
         is_empty = (qf_label == "QF Slot")
         if st.button(qf_label, key=f"btn_{qf_key}", disabled=is_empty):
             st.session_state.slots[f"sf_l_{i//2}"] = qf_label
+            trigger_match_score(qf_label, "Opponent", round_name="Quarterfinals", round_mult=1.0)
             st.rerun()
         if i < 3:
             st.markdown('<div class="qf-gap"></div>', unsafe_allow_html=True)
@@ -224,36 +222,32 @@ with c3:
         is_empty = (sf_label == "Semi Final")
         if st.button(sf_label, key=f"btn_{sf_key}", disabled=is_empty):
             st.session_state.slots["finalist_1"] = sf_label
+            trigger_match_score(sf_label, "Opponent", round_name="Semifinals", round_mult=1.05)
             st.rerun()
         if i == 0:
             st.markdown('<div class="sf-gap"></div>', unsafe_allow_html=True)
 
-# 4. CENTER - FINALS & CHAMPION (Stacked Vertically & Centered)
+# 4. CENTER - FINALS & CHAMPION
 with c4:
     st.markdown('<div class="finals-title">👑 FINALS 👑</div>', unsafe_allow_html=True)
     st.markdown('<div class="finals-spacer"></div>', unsafe_allow_html=True)
     
-    # Finalist 1 (Top)
     f1_label = st.session_state.slots.get("finalist_1", "Finalist 1")
     if st.button(f1_label, key="btn_f1", disabled=(f1_label == "Finalist 1")):
         st.session_state.slots["champion"] = f1_label
         f2_label = st.session_state.slots.get("finalist_2", "")
-        if f2_label:
-            st.session_state.match_scores.append(calc_match_score(f1_label, f2_label, 1.1))
+        trigger_match_score(f1_label, f2_label, round_name="Championship Match", round_mult=1.1)
         st.rerun()
 
-    # VS Badge
     st.markdown("<p style='text-align: center; color: #ef4444; font-weight: 900; margin: 6px 0; letter-spacing: 0.15em; font-family: Montserrat;'>VS</p>", unsafe_allow_html=True)
     
-    # Finalist 2 (Bottom)
     f2_label = st.session_state.slots.get("finalist_2", "Finalist 2")
     if st.button(f2_label, key="btn_f2", disabled=(f2_label == "Finalist 2")):
         st.session_state.slots["champion"] = f2_label
-        if f1_label:
-            st.session_state.match_scores.append(calc_match_score(f2_label, f1_label, 1.1))
+        f1_label = st.session_state.slots.get("finalist_1", "")
+        trigger_match_score(f2_label, f1_label, round_name="Championship Match", round_mult=1.1)
         st.rerun()
 
-    # Centered Champion Slot (Single trophy icon)
     st.markdown('<div style="height: 35px;"></div>', unsafe_allow_html=True)
     champ_label = st.session_state.slots.get("champion", "???")
     st.markdown('<div class="champ-container">', unsafe_allow_html=True)
@@ -269,6 +263,7 @@ with c5:
         is_empty = (sf_label == "Semi Final")
         if st.button(sf_label, key=f"btn_{sf_key}", disabled=is_empty):
             st.session_state.slots["finalist_2"] = sf_label
+            trigger_match_score(sf_label, "Opponent", round_name="Semifinals", round_mult=1.05)
             st.rerun()
         if i == 0:
             st.markdown('<div class="sf-gap"></div>', unsafe_allow_html=True)
@@ -282,6 +277,7 @@ with c6:
         is_empty = (qf_label == "QF Slot")
         if st.button(qf_label, key=f"btn_{qf_key}", disabled=is_empty):
             st.session_state.slots[f"sf_r_{i//2}"] = qf_label
+            trigger_match_score(qf_label, "Opponent", round_name="Quarterfinals", round_mult=1.0)
             st.rerun()
         if i < 3:
             st.markdown('<div class="qf-gap"></div>', unsafe_allow_html=True)
@@ -297,8 +293,7 @@ with c7:
             else:
                 st.session_state.slots[f"qf_r_{i//2}"] = label
                 p_opp = st.session_state.slots.get(f"r16_r_{i^1}", "")
-                if p_opp:
-                    st.session_state.match_scores.append(calc_match_score(label, p_opp, 0.95))
+                trigger_match_score(label, p_opp, round_name="Round of 16", round_mult=0.95)
                 st.rerun()
         if i % 2 == 1 and i < 7:
             st.markdown('<div style="height: 16px;"></div>', unsafe_allow_html=True)
