@@ -9,13 +9,14 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. Premium AEW Theme CSS
+# 2. Premium AEW Theme CSS with Extra Top Padding
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
 
+    /* Added extra top padding to pull title and bracket down into full view */
     .block-container {
-        padding-top: 1.5rem !important;
+        padding-top: 3.5rem !important;
         padding-bottom: 1.5rem !important;
         max-width: 99% !important;
     }
@@ -24,6 +25,7 @@ st.markdown("""
         background: radial-gradient(circle at center, #181d28 0%, #080a0e 100%) !important;
     }
 
+    /* Main Big AEW Gold Header with top margin */
     .aew-main-title {
         text-align: center;
         font-size: 2.5rem;
@@ -31,8 +33,8 @@ st.markdown("""
         color: #ffd700;
         text-transform: uppercase;
         letter-spacing: 0.12em;
-        margin-top: 0px;
-        margin-bottom: 0.6rem;
+        margin-top: 10px !important;
+        margin-bottom: 0.8rem;
         font-family: 'Impact', 'Montserrat', sans-serif, Arial;
         text-shadow: 0 0 16px rgba(255, 215, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.2);
     }
@@ -179,7 +181,6 @@ def handle_r16_draft(key):
 # --- BRACKET GRID (7 COLUMNS) ---
 c1, c2, c3, c4, c5, c6, c7 = st.columns([1.2, 1.1, 1.1, 1.4, 1.1, 1.1, 1.2])
 
-# Helper to format button label with score if available
 def get_label(slot_key, default_name):
     name = st.session_state.slots.get(slot_key, default_name)
     score = st.session_state.scores.get(slot_key)
@@ -264,7 +265,7 @@ with c4:
     st.markdown('<div style="height: 35px;"></div>', unsafe_allow_html=True)
     champ_label = get_label("champion", "???")
     st.markdown('<div class="champ-container">', unsafe_allow_html=True)
-    st.button(f"🏆 CHAMPION: {champ_label}", key="btn_champ", disabled=("???" in champ_label))
+    st.button(f"🏆 CHAMPION: {champ_label}", key="btn_champ", disabled=("??" in champ_label))
     st.markdown('</div>', unsafe_allow_html=True)
 
 # 5. RIGHT - SEMIFINALS
