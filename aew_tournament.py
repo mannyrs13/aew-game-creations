@@ -9,12 +9,11 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. Premium AEW Theme CSS with Extra Top Padding
+# 2. Premium AEW Theme CSS + Animated SVG Line Overlay
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
 
-    /* Added extra top padding to pull title and bracket down into full view */
     .block-container {
         padding-top: 3.5rem !important;
         padding-bottom: 1.5rem !important;
@@ -25,7 +24,6 @@ st.markdown("""
         background: radial-gradient(circle at center, #181d28 0%, #080a0e 100%) !important;
     }
 
-    /* Main Big AEW Gold Header with top margin */
     .aew-main-title {
         text-align: center;
         font-size: 2.5rem;
@@ -51,6 +49,7 @@ st.markdown("""
         text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
     }
 
+    /* Interactive Buttons */
     div.stButton > button {
         width: 100% !important;
         background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%) !important;
@@ -68,6 +67,8 @@ st.markdown("""
         margin: 2px 0 !important;
         box-shadow: 0 4px 12px rgba(255, 215, 0, 0.25) !important;
         transition: all 0.15s ease-in-out !important;
+        position: relative;
+        z-index: 2;
     }
 
     div.stButton > button:hover {
@@ -100,6 +101,32 @@ st.markdown("""
         box-shadow: 0 0 20px rgba(255, 215, 0, 0.4) !important;
     }
 
+    /* ANIMATED OVERLAY BRACKET LINES */
+    .connector-overlay {
+        position: absolute;
+        top: 180px;
+        left: 0;
+        width: 100%;
+        height: 600px;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .connector-overlay path {
+        stroke: #ffd700;
+        stroke-width: 2;
+        fill: none;
+        opacity: 0.45;
+        stroke-dasharray: 6 3;
+        animation: pulseLines 2s linear infinite;
+    }
+
+    @keyframes pulseLines {
+        0% { stroke-dashoffset: 0; opacity: 0.35; }
+        50% { opacity: 0.75; stroke: #ffcc00; }
+        100% { stroke-dashoffset: -18; opacity: 0.35; }
+    }
+
     .qf-spacer { height: 35px; }
     .qf-gap { height: 62px; }
     .sf-spacer { height: 95px; }
@@ -121,7 +148,16 @@ def get_shuffled_roster():
     random.shuffle(keys)
     return keys
 
-# Initialize Session State
+def get_star_rating(score):
+    if score >= 92.0:
+        return f"5.0⭐"
+    elif score >= 88.0:
+        return f"4.5⭐"
+    elif score >= 84.0:
+        return f"4.0⭐"
+    else:
+        return f"3.5⭐"
+
 if "slots" not in st.session_state:
     st.session_state.slots = {}
 if "scores" not in st.session_state:
@@ -135,7 +171,6 @@ drafted_count = sum(1 for k in st.session_state.slots.keys() if k.startswith("r1
 draft_complete = (drafted_count >= 16)
 current_wrestler = st.session_state.roster[drafted_count] if not draft_complete else None
 
-# Match Grade Calculator
 def calc_match_score(p1, p2, round_mult=1.0):
     if p1 in RATINGS and p2 in RATINGS:
         base = (RATINGS[p1] + RATINGS[p2]) / 2.0
@@ -173,6 +208,31 @@ with nav_c3:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
+# SVG BRACKET CONNECTOR LINES OVERLAY
+st.markdown("""
+<svg class="connector-overlay" viewBox="0 0 1200 550" preserveAspectRatio="none">
+    <!-- LEFT SIDE TREE CONNECTORS -->
+    <path d="M 160,25 H 200 V 85 H 160 M 200,55 H 240" />
+    <path d="M 160,145 H 200 V 205 H 160 M 200,175 H 240" />
+    <path d="M 160,265 H 200 V 325 H 160 M 200,295 H 240" />
+    <path d="M 160,385 H 200 V 445 H 160 M 200,415 H 240" />
+    
+    <path d="M 360,55 H 400 V 175 H 360 M 400,115 H 440" />
+    <path d="M 360,295 H 400 V 415 H 360 M 400,355 H 440" />
+    
+    <path d="M 560,115 H 600 V 355 H 560 M 600,235 H 640" />
+
+    <!-- RIGHT SIDE TREE CONNECTORS -->
+    <path d="M 1040,25 H 1000 V 85 H 1040 M 1000,55 H 960" />
+    <path d="M 1040,145 H 1000 V 205 H 1040 M 1000,175 H 960" />
+    <path d="M 1040,265 H 1000 V 325 H 1040 M 1000,295 H 960" />
+    <path d="M 1040,385 H 1000 V 445 H 1040 M 1000,415 H 960" />
+
+    <path d="M 840,55 H 800 V 175 H 840 M 800,115 H 760" />
+    <path d="M 840,295 H 800 V 415 H 840 M 800,355 H 760" />
+</svg>
+""", unsafe_allow_html=True)
+
 def handle_r16_draft(key):
     if key not in st.session_state.slots and not draft_complete:
         st.session_state.slots[key] = current_wrestler
@@ -185,7 +245,8 @@ def get_label(slot_key, default_name):
     name = st.session_state.slots.get(slot_key, default_name)
     score = st.session_state.scores.get(slot_key)
     if score and name != default_name:
-        return f"{name} ⭐ {score}"
+        stars = get_star_rating(score)
+        return f"{name} ({stars} {score})"
     return name
 
 # 1. LEFT - ROUND OF 16
@@ -265,7 +326,7 @@ with c4:
     st.markdown('<div style="height: 35px;"></div>', unsafe_allow_html=True)
     champ_label = get_label("champion", "???")
     st.markdown('<div class="champ-container">', unsafe_allow_html=True)
-    st.button(f"🏆 CHAMPION: {champ_label}", key="btn_champ", disabled=("??" in champ_label))
+    st.button(f"🏆 CHAMPION: {champ_label}", key="btn_champ", disabled=("???" in champ_label))
     st.markdown('</div>', unsafe_allow_html=True)
 
 # 5. RIGHT - SEMIFINALS
