@@ -9,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. Premium AEW CSS Theme (High-Contrast Buttons & Slot States)
+# 2. Premium AEW CSS Theme (Optimized Text Fit & Padding)
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
@@ -21,7 +21,7 @@ st.markdown("""
 
     /* Page Spacing */
     .block-container {
-        padding-top: 3.5rem !important;
+        padding-top: 3rem !important;
         padding-bottom: 2rem !important;
         max-width: 99% !important;
     }
@@ -44,15 +44,32 @@ st.markdown("""
         text-shadow: 0 0 16px rgba(255, 215, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.2);
     }
 
-    .finals-title {
+    /* Column Round Headers */
+    .round-header {
         text-align: center;
-        font-size: 1.3rem;
+        font-size: 0.85rem;
         font-weight: 900;
         color: #ffd700;
         text-transform: uppercase;
-        letter-spacing: 0.15em;
-        margin-bottom: 0.5rem;
+        letter-spacing: 0.08em;
         font-family: 'Impact', 'Montserrat', sans-serif;
+        padding: 4px 0;
+        margin-bottom: 8px;
+        border-bottom: 1px solid #334155;
+        text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    }
+
+    .finals-header {
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: 900;
+        color: #ffd700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-family: 'Impact', 'Montserrat', sans-serif;
+        padding: 4px 0;
+        margin-bottom: 8px;
+        border-bottom: 1px solid #ffd700;
         text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
     }
 
@@ -63,11 +80,11 @@ st.markdown("""
         color: #000000 !important;
         border: 2px solid #ffe566 !important;
         border-radius: 5px !important;
-        padding: 0.5rem 0.2rem !important;
+        padding: 0.35rem 0.1rem !important;
         font-weight: 900 !important;
-        font-size: 0.85rem !important;
+        font-size: 0.78rem !important;
         font-family: 'Montserrat', sans-serif !important;
-        letter-spacing: 0.03em !important;
+        letter-spacing: -0.01em !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
@@ -81,7 +98,7 @@ st.markdown("""
         color: #ffffff !important;
         border-color: #f87171 !important;
         box-shadow: 0 0 15px rgba(239, 68, 68, 0.6) !important;
-        transform: scale(1.03);
+        transform: scale(1.02);
     }
 
     /* FILLED / PLACED WRESTLER CARDS */
@@ -93,7 +110,8 @@ st.markdown("""
         border-radius: 5px !important;
         opacity: 0.95 !important;
         font-weight: 800 !important;
-        font-size: 0.82rem !important;
+        font-size: 0.78rem !important;
+        letter-spacing: -0.01em !important;
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6) !important;
     }
 
@@ -102,17 +120,17 @@ st.markdown("""
         background: radial-gradient(circle, #2a220a 0%, #0d1117 100%) !important;
         border: 2px solid #ffd700 !important;
         color: #ffd700 !important;
-        font-size: 0.95rem !important;
+        font-size: 0.88rem !important;
         font-family: 'Impact', 'Montserrat', sans-serif !important;
-        letter-spacing: 0.05em !important;
+        letter-spacing: 0.02em !important;
         box-shadow: 0 0 20px rgba(255, 215, 0, 0.4) !important;
     }
 
-    .qf-spacer { height: 35px; }
+    .qf-spacer { height: 25px; }
     .qf-gap { height: 62px; }
-    .sf-spacer { height: 95px; }
+    .sf-spacer { height: 85px; }
     .sf-gap { height: 140px; }
-    .finals-spacer { height: 60px; }
+    .finals-spacer { height: 50px; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -186,7 +204,7 @@ def handle_r16_draft(key):
         st.rerun()
 
 # --- BRACKET GRID (7 COLUMNS) ---
-c1, c2, c3, c4, c5, c6, c7 = st.columns([1.2, 1.1, 1.1, 1.4, 1.1, 1.1, 1.2])
+c1, c2, c3, c4, c5, c6, c7 = st.columns([1.3, 1.2, 1.2, 1.5, 1.2, 1.2, 1.3])
 
 def get_label(slot_key, default_name):
     name = st.session_state.slots.get(slot_key, default_name)
@@ -197,12 +215,12 @@ def get_label(slot_key, default_name):
 
 # 1. LEFT - ROUND OF 16
 with c1:
+    st.markdown('<div class="round-header">ROUND OF 16</div>', unsafe_allow_html=True)
     for i in range(8):
         slot_key = f"r16_l_{i}"
         is_filled = slot_key in st.session_state.slots
         label = st.session_state.slots.get(slot_key, "Place Here")
         
-        # Disable button if filled during draft OR if draft is complete
         is_disabled = (not draft_complete and is_filled) or (draft_complete and label == "Place Here")
         
         if st.button(label, key=f"btn_{slot_key}", disabled=is_disabled):
@@ -219,6 +237,7 @@ with c1:
 
 # 2. LEFT - QUARTERFINALS
 with c2:
+    st.markdown('<div class="round-header">QUARTERFINALS</div>', unsafe_allow_html=True)
     st.markdown('<div class="qf-spacer"></div>', unsafe_allow_html=True)
     for i in range(4):
         qf_key = f"qf_l_{i}"
@@ -237,6 +256,7 @@ with c2:
 
 # 3. LEFT - SEMIFINALS
 with c3:
+    st.markdown('<div class="round-header">SEMIFINALS</div>', unsafe_allow_html=True)
     st.markdown('<div class="sf-spacer"></div>', unsafe_allow_html=True)
     for i in range(2):
         sf_key = f"sf_l_{i}"
@@ -253,7 +273,7 @@ with c3:
 
 # 4. CENTER - FINALS & CHAMPION
 with c4:
-    st.markdown('<div class="finals-title">👑 FINALS 👑</div>', unsafe_allow_html=True)
+    st.markdown('<div class="finals-header">FINALS</div>', unsafe_allow_html=True)
     st.markdown('<div class="finals-spacer"></div>', unsafe_allow_html=True)
     
     f1_label = get_label("finalist_1", "Finalist 1")
@@ -277,11 +297,12 @@ with c4:
     st.markdown('<div style="height: 35px;"></div>', unsafe_allow_html=True)
     champ_label = get_label("champion", "???")
     st.markdown('<div class="champ-container">', unsafe_allow_html=True)
-    st.button(f"🏆 CHAMPION: {champ_label}", key="btn_champ", disabled=("???" in champ_label))
+    st.button(f"🏆 {champ_label}", key="btn_champ", disabled=("???" in champ_label))
     st.markdown('</div>', unsafe_allow_html=True)
 
 # 5. RIGHT - SEMIFINALS
 with c5:
+    st.markdown('<div class="round-header">SEMIFINALS</div>', unsafe_allow_html=True)
     st.markdown('<div class="sf-spacer"></div>', unsafe_allow_html=True)
     for i in range(2):
         sf_key = f"sf_r_{i}"
@@ -298,6 +319,7 @@ with c5:
 
 # 6. RIGHT - QUARTERFINALS
 with c6:
+    st.markdown('<div class="round-header">QUARTERFINALS</div>', unsafe_allow_html=True)
     st.markdown('<div class="qf-spacer"></div>', unsafe_allow_html=True)
     for i in range(4):
         qf_key = f"qf_r_{i}"
@@ -316,6 +338,7 @@ with c6:
 
 # 7. RIGHT - ROUND OF 16
 with c7:
+    st.markdown('<div class="round-header">ROUND OF 16</div>', unsafe_allow_html=True)
     for i in range(8):
         slot_key = f"r16_r_{i}"
         is_filled = slot_key in st.session_state.slots
