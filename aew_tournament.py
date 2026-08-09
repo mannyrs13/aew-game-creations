@@ -253,11 +253,11 @@ with c4:
             st.session_state.match_scores.append(calc_match_score(f2_label, f1_label, 1.1))
         st.rerun()
 
-    # Centered Champion Slot
+    # Centered Champion Slot (Single trophy icon)
     st.markdown('<div style="height: 35px;"></div>', unsafe_allow_html=True)
     champ_label = st.session_state.slots.get("champion", "???")
     st.markdown('<div class="champ-container">', unsafe_allow_html=True)
-    st.button(f"🏆 CHAMPION: {champ_label} 🏆", key="btn_champ", disabled=(champ_label == "???"))
+    st.button(f"🏆 CHAMPION: {champ_label}", key="btn_champ", disabled=(champ_label == "???"))
     st.markdown('</div>', unsafe_allow_html=True)
 
 # 5. RIGHT - SEMIFINALS
