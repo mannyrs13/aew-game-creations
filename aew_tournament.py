@@ -1,7 +1,7 @@
 import streamlit as st
 import random
 
-# 1. Page Config
+# 1. Page Configuration
 st.set_page_config(
     page_title="AEW 16-Man Tournament GM",
     page_icon="🏆",
@@ -9,85 +9,101 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. Enhanced AEW PPV Dark Gold Theme CSS
+# 2. Premium AEW Theme CSS Overhaul
 st.markdown("""
     <style>
-    /* Remove padding and add authentic AEW dark obsidian textured gradient background */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
+
+    /* Remove default whitespace & set textured radial background */
     .block-container {
-        padding-top: 1.8rem !important;
+        padding-top: 1.5rem !important;
         padding-bottom: 1.5rem !important;
         max-width: 99% !important;
     }
 
     .stApp {
-        background: radial-gradient(circle at center, #151922 0%, #0b0e14 100%) !important;
+        background: radial-gradient(circle at center, #181d28 0%, #080a0e 100%) !important;
     }
 
     /* Main Big AEW Gold Header */
     .aew-main-title {
         text-align: center;
-        font-size: 2.2rem;
+        font-size: 2.5rem;
         font-weight: 900;
         color: #ffd700;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.12em;
         margin-top: 0px;
-        margin-bottom: 0.8rem;
-        font-family: 'Impact', sans-serif, Arial;
-        text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+        margin-bottom: 0.6rem;
+        font-family: 'Impact', 'Montserrat', sans-serif, Arial;
+        text-shadow: 0 0 16px rgba(255, 215, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.2);
     }
 
     .finals-title {
         text-align: center;
-        font-size: 1.25rem;
+        font-size: 1.3rem;
         font-weight: 900;
         color: #ffd700;
         text-transform: uppercase;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.15em;
         margin-bottom: 0.5rem;
-        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        font-family: 'Impact', 'Montserrat', sans-serif;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
     }
 
-    /* Primary Draft Buttons (Neon Green During Draft, Gold Accents) */
+    /* Primary Draft Buttons ("Place Here" / Active Wrestlers) */
     div.stButton > button {
         width: 100% !important;
-        background-color: #00ff66 !important;
+        background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%) !important;
         color: #000000 !important;
-        border: 1px solid #00cc52 !important;
-        border-radius: 4px !important;
-        padding: 0.45rem 0.2rem !important;
-        font-weight: 800 !important;
-        font-size: 0.82rem !important;
+        border: 1px solid #ffe566 !important;
+        border-radius: 5px !important;
+        padding: 0.5rem 0.2rem !important;
+        font-weight: 900 !important;
+        font-size: 0.85rem !important;
+        font-family: 'Montserrat', -apple-system, sans-serif !important;
+        letter-spacing: 0.03em !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         margin: 2px 0 !important;
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.25) !important;
+        transition: all 0.15s ease-in-out !important;
     }
 
     div.stButton > button:hover {
-        background-color: #00cc52 !important;
-        color: #000000 !important;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+        color: #ffffff !important;
+        border-color: #f87171 !important;
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.5) !important;
+        transform: scale(1.02);
     }
 
-    /* Disabled/Empty Dark Slots with Subtle Gold/Slate Border */
+    /* Filled / Placed Wrestler Cards */
     div.stButton > button:disabled {
-        background-color: #161b22 !important;
-        color: #8b949e !important;
-        border: 1px solid #30363d !important;
-        border-left: 3px solid #d4af37 !important;
-        opacity: 0.85 !important;
+        background: linear-gradient(180deg, #1e2430 0%, #121620 100%) !important;
+        color: #f1f5f9 !important;
+        border: 1px solid #334155 !important;
+        border-left: 4px solid #ffd700 !important;
+        border-radius: 5px !important;
+        opacity: 0.95 !important;
+        font-weight: 800 !important;
+        font-size: 0.82rem !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
     }
 
-    /* Center Champion Box Highlight */
+    /* Champion Center Highlight Card */
     .champ-container div.stButton > button:disabled {
-        background: radial-gradient(circle, #21262d 0%, #0d1117 100%) !important;
+        background: radial-gradient(circle, #2a220a 0%, #0d1117 100%) !important;
         border: 2px solid #ffd700 !important;
         color: #ffd700 !important;
         font-size: 0.95rem !important;
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.25) !important;
+        font-family: 'Impact', 'Montserrat', sans-serif !important;
+        letter-spacing: 0.05em !important;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.4) !important;
     }
 
-    /* Vertical Alignment Spacers */
+    /* Vertical Spacers */
     .qf-spacer { height: 35px; }
     .qf-gap { height: 62px; }
     .sf-spacer { height: 95px; }
@@ -150,13 +166,13 @@ with nav_c1:
         st.rerun()
 
 with nav_c2:
-    st.markdown(f"<p style='color: #cccccc; margin-top: 8px; font-weight: 600; font-size: 0.9rem;'>🏆 Personal Best: {st.session_state.pb_score}/100 | Current Grade: <span style='color:#00ff66;'>{current_avg}</span></p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color: #e2e8f0; margin-top: 8px; font-weight: 700; font-size: 0.9rem;'>🏆 Personal Best: <span style='color:#ffd700;'>{st.session_state.pb_score}/100</span> | Grade: <span style='color:#10b981;'>{current_avg}</span></p>", unsafe_allow_html=True)
 
 with nav_c3:
     if not draft_complete:
-        st.markdown(f"<p style='color: #ffd700; margin-top: 8px; font-weight: 800; font-size: 0.95rem;'>ON THE CLOCK: {current_wrestler.upper()} <span style='color: #ff4444;'>(Click an empty slot)</span></p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: #ffd700; margin-top: 8px; font-weight: 900; font-size: 0.95rem; text-transform: uppercase;'>ON THE CLOCK: <span style='color:#ffffff; text-decoration: underline;'>{current_wrestler.upper()}</span> <span style='color: #ef4444;'>(Click empty slot)</span></p>", unsafe_allow_html=True)
     else:
-        st.markdown("<p style='color: #00ff66; margin-top: 8px; font-weight: 800; font-size: 0.95rem;'>DRAFT COMPLETE! Click participants to advance winners.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #10b981; margin-top: 8px; font-weight: 900; font-size: 0.95rem;'>DRAFT COMPLETE! Click participants to advance winners.</p>", unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -227,7 +243,7 @@ with c4:
         st.rerun()
 
     # VS Badge
-    st.markdown("<p style='text-align: center; color: #ef4444; font-weight: 900; margin: 6px 0; letter-spacing: 0.1em;'>VS</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #ef4444; font-weight: 900; margin: 6px 0; letter-spacing: 0.15em; font-family: Montserrat;'>VS</p>", unsafe_allow_html=True)
     
     # Finalist 2 (Bottom)
     f2_label = st.session_state.slots.get("finalist_2", "Finalist 2")
