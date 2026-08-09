@@ -9,15 +9,20 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. Premium AEW Theme CSS with Extra Top Padding
+# 2. Premium AEW CSS Theme (High-Contrast Buttons & Slot States)
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
 
-    /* Added extra top padding to pull title and bracket down into full view */
+    html, body, [data-testid="stAppViewContainer"], .stApp {
+        overflow-y: auto !important;
+        height: auto !important;
+    }
+
+    /* Page Spacing */
     .block-container {
         padding-top: 3.5rem !important;
-        padding-bottom: 1.5rem !important;
+        padding-bottom: 2rem !important;
         max-width: 99% !important;
     }
 
@@ -25,7 +30,7 @@ st.markdown("""
         background: radial-gradient(circle at center, #181d28 0%, #080a0e 100%) !important;
     }
 
-    /* Main Big AEW Gold Header with top margin */
+    /* AEW Main Header */
     .aew-main-title {
         text-align: center;
         font-size: 2.5rem;
@@ -51,22 +56,23 @@ st.markdown("""
         text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
     }
 
+    /* ACTIVE / EMPTY SLOT BUTTONS ("Place Here") */
     div.stButton > button {
         width: 100% !important;
         background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%) !important;
         color: #000000 !important;
-        border: 1px solid #ffe566 !important;
+        border: 2px solid #ffe566 !important;
         border-radius: 5px !important;
         padding: 0.5rem 0.2rem !important;
         font-weight: 900 !important;
-        font-size: 0.82rem !important;
-        font-family: 'Montserrat', -apple-system, sans-serif !important;
+        font-size: 0.85rem !important;
+        font-family: 'Montserrat', sans-serif !important;
         letter-spacing: 0.03em !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         margin: 2px 0 !important;
-        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.25) !important;
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.35) !important;
         transition: all 0.15s ease-in-out !important;
     }
 
@@ -74,22 +80,24 @@ st.markdown("""
         background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
         color: #ffffff !important;
         border-color: #f87171 !important;
-        box-shadow: 0 0 15px rgba(239, 68, 68, 0.5) !important;
-        transform: scale(1.02);
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.6) !important;
+        transform: scale(1.03);
     }
 
+    /* FILLED / PLACED WRESTLER CARDS */
     div.stButton > button:disabled {
-        background: linear-gradient(180deg, #1e2430 0%, #121620 100%) !important;
-        color: #f1f5f9 !important;
-        border: 1px solid #334155 !important;
-        border-left: 4px solid #ffd700 !important;
+        background: linear-gradient(180deg, #182030 0%, #0d121c 100%) !important;
+        color: #ffffff !important;
+        border: 1px solid #2b384e !important;
+        border-left: 4px solid #00ff66 !important;
         border-radius: 5px !important;
         opacity: 0.95 !important;
         font-weight: 800 !important;
         font-size: 0.82rem !important;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6) !important;
     }
 
+    /* CHAMPION HIGHLIGHT CARD */
     .champ-container div.stButton > button:disabled {
         background: radial-gradient(circle, #2a220a 0%, #0d1117 100%) !important;
         border: 2px solid #ffd700 !important;
@@ -135,7 +143,6 @@ drafted_count = sum(1 for k in st.session_state.slots.keys() if k.startswith("r1
 draft_complete = (drafted_count >= 16)
 current_wrestler = st.session_state.roster[drafted_count] if not draft_complete else None
 
-# Match Grade Calculator
 def calc_match_score(p1, p2, round_mult=1.0):
     if p1 in RATINGS and p2 in RATINGS:
         base = (RATINGS[p1] + RATINGS[p2]) / 2.0
@@ -169,7 +176,7 @@ with nav_c3:
     if not draft_complete:
         st.markdown(f"<p style='color: #ffd700; margin-top: 8px; font-weight: 900; font-size: 0.95rem; text-transform: uppercase;'>ON THE CLOCK: <span style='color:#ffffff; text-decoration: underline;'>{current_wrestler.upper()}</span> <span style='color: #ef4444;'>(Click empty slot)</span></p>", unsafe_allow_html=True)
     else:
-        st.markdown("<p style='color: #10b981; margin-top: 8px; font-weight: 900; font-size: 0.95rem;'>DRAFT COMPLETE! Click participants to advance winners.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #00ff66; margin-top: 8px; font-weight: 900; font-size: 0.95rem;'>🎉 DRAFT COMPLETE! Click participants to advance winners.</p>", unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -185,15 +192,20 @@ def get_label(slot_key, default_name):
     name = st.session_state.slots.get(slot_key, default_name)
     score = st.session_state.scores.get(slot_key)
     if score and name != default_name:
-        return f"{name} ⭐ {score}"
+        return f"{name} ({score})"
     return name
 
 # 1. LEFT - ROUND OF 16
 with c1:
     for i in range(8):
         slot_key = f"r16_l_{i}"
+        is_filled = slot_key in st.session_state.slots
         label = st.session_state.slots.get(slot_key, "Place Here")
-        if st.button(label, key=f"btn_{slot_key}", disabled=(draft_complete and label == "Place Here")):
+        
+        # Disable button if filled during draft OR if draft is complete
+        is_disabled = (not draft_complete and is_filled) or (draft_complete and label == "Place Here")
+        
+        if st.button(label, key=f"btn_{slot_key}", disabled=is_disabled):
             if not draft_complete:
                 handle_r16_draft(slot_key)
             else:
@@ -265,7 +277,7 @@ with c4:
     st.markdown('<div style="height: 35px;"></div>', unsafe_allow_html=True)
     champ_label = get_label("champion", "???")
     st.markdown('<div class="champ-container">', unsafe_allow_html=True)
-    st.button(f"🏆 CHAMPION: {champ_label}", key="btn_champ", disabled=("??" in champ_label))
+    st.button(f"🏆 CHAMPION: {champ_label}", key="btn_champ", disabled=("???" in champ_label))
     st.markdown('</div>', unsafe_allow_html=True)
 
 # 5. RIGHT - SEMIFINALS
@@ -306,8 +318,12 @@ with c6:
 with c7:
     for i in range(8):
         slot_key = f"r16_r_{i}"
+        is_filled = slot_key in st.session_state.slots
         label = st.session_state.slots.get(slot_key, "Place Here")
-        if st.button(label, key=f"btn_{slot_key}", disabled=(draft_complete and label == "Place Here")):
+        
+        is_disabled = (not draft_complete and is_filled) or (draft_complete and label == "Place Here")
+        
+        if st.button(label, key=f"btn_{slot_key}", disabled=is_disabled):
             if not draft_complete:
                 handle_r16_draft(slot_key)
             else:
