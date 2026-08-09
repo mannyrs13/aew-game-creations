@@ -9,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. Premium AEW Theme CSS + Animated SVG Line Overlay
+# 2. Premium AEW Theme CSS
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
@@ -49,7 +49,6 @@ st.markdown("""
         text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
     }
 
-    /* Interactive Buttons */
     div.stButton > button {
         width: 100% !important;
         background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%) !important;
@@ -67,8 +66,6 @@ st.markdown("""
         margin: 2px 0 !important;
         box-shadow: 0 4px 12px rgba(255, 215, 0, 0.25) !important;
         transition: all 0.15s ease-in-out !important;
-        position: relative;
-        z-index: 2;
     }
 
     div.stButton > button:hover {
@@ -99,32 +96,6 @@ st.markdown("""
         font-family: 'Impact', 'Montserrat', sans-serif !important;
         letter-spacing: 0.05em !important;
         box-shadow: 0 0 20px rgba(255, 215, 0, 0.4) !important;
-    }
-
-    /* ANIMATED OVERLAY BRACKET LINES */
-    .connector-overlay {
-        position: absolute;
-        top: 180px;
-        left: 0;
-        width: 100%;
-        height: 600px;
-        pointer-events: none;
-        z-index: 1;
-    }
-
-    .connector-overlay path {
-        stroke: #ffd700;
-        stroke-width: 2;
-        fill: none;
-        opacity: 0.45;
-        stroke-dasharray: 6 3;
-        animation: pulseLines 2s linear infinite;
-    }
-
-    @keyframes pulseLines {
-        0% { stroke-dashoffset: 0; opacity: 0.35; }
-        50% { opacity: 0.75; stroke: #ffcc00; }
-        100% { stroke-dashoffset: -18; opacity: 0.35; }
     }
 
     .qf-spacer { height: 35px; }
@@ -207,31 +178,6 @@ with nav_c3:
         st.markdown("<p style='color: #10b981; margin-top: 8px; font-weight: 900; font-size: 0.95rem;'>DRAFT COMPLETE! Click participants to advance winners.</p>", unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
-
-# SVG BRACKET CONNECTOR LINES OVERLAY
-st.markdown("""
-<svg class="connector-overlay" viewBox="0 0 1200 550" preserveAspectRatio="none">
-    <!-- LEFT SIDE TREE CONNECTORS -->
-    <path d="M 160,25 H 200 V 85 H 160 M 200,55 H 240" />
-    <path d="M 160,145 H 200 V 205 H 160 M 200,175 H 240" />
-    <path d="M 160,265 H 200 V 325 H 160 M 200,295 H 240" />
-    <path d="M 160,385 H 200 V 445 H 160 M 200,415 H 240" />
-    
-    <path d="M 360,55 H 400 V 175 H 360 M 400,115 H 440" />
-    <path d="M 360,295 H 400 V 415 H 360 M 400,355 H 440" />
-    
-    <path d="M 560,115 H 600 V 355 H 560 M 600,235 H 640" />
-
-    <!-- RIGHT SIDE TREE CONNECTORS -->
-    <path d="M 1040,25 H 1000 V 85 H 1040 M 1000,55 H 960" />
-    <path d="M 1040,145 H 1000 V 205 H 1040 M 1000,175 H 960" />
-    <path d="M 1040,265 H 1000 V 325 H 1040 M 1000,295 H 960" />
-    <path d="M 1040,385 H 1000 V 445 H 1040 M 1000,415 H 960" />
-
-    <path d="M 840,55 H 800 V 175 H 840 M 800,115 H 760" />
-    <path d="M 840,295 H 800 V 415 H 840 M 800,355 H 760" />
-</svg>
-""", unsafe_allow_html=True)
 
 def handle_r16_draft(key):
     if key not in st.session_state.slots and not draft_complete:
