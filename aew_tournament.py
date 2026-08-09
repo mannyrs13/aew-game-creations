@@ -9,11 +9,12 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. Premium AEW Theme CSS
+# 2. Premium AEW Theme CSS with Extra Top Padding
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
 
+    /* Added extra top padding to pull title and bracket down into full view */
     .block-container {
         padding-top: 3.5rem !important;
         padding-bottom: 1.5rem !important;
@@ -24,6 +25,7 @@ st.markdown("""
         background: radial-gradient(circle at center, #181d28 0%, #080a0e 100%) !important;
     }
 
+    /* Main Big AEW Gold Header with top margin */
     .aew-main-title {
         text-align: center;
         font-size: 2.5rem;
@@ -119,16 +121,7 @@ def get_shuffled_roster():
     random.shuffle(keys)
     return keys
 
-def get_star_rating(score):
-    if score >= 92.0:
-        return f"5.0⭐"
-    elif score >= 88.0:
-        return f"4.5⭐"
-    elif score >= 84.0:
-        return f"4.0⭐"
-    else:
-        return f"3.5⭐"
-
+# Initialize Session State
 if "slots" not in st.session_state:
     st.session_state.slots = {}
 if "scores" not in st.session_state:
@@ -142,6 +135,7 @@ drafted_count = sum(1 for k in st.session_state.slots.keys() if k.startswith("r1
 draft_complete = (drafted_count >= 16)
 current_wrestler = st.session_state.roster[drafted_count] if not draft_complete else None
 
+# Match Grade Calculator
 def calc_match_score(p1, p2, round_mult=1.0):
     if p1 in RATINGS and p2 in RATINGS:
         base = (RATINGS[p1] + RATINGS[p2]) / 2.0
@@ -191,8 +185,7 @@ def get_label(slot_key, default_name):
     name = st.session_state.slots.get(slot_key, default_name)
     score = st.session_state.scores.get(slot_key)
     if score and name != default_name:
-        stars = get_star_rating(score)
-        return f"{name} ({stars} {score})"
+        return f"{name} ⭐ {score}"
     return name
 
 # 1. LEFT - ROUND OF 16
@@ -272,7 +265,7 @@ with c4:
     st.markdown('<div style="height: 35px;"></div>', unsafe_allow_html=True)
     champ_label = get_label("champion", "???")
     st.markdown('<div class="champ-container">', unsafe_allow_html=True)
-    st.button(f"🏆 CHAMPION: {champ_label}", key="btn_champ", disabled=("???" in champ_label))
+    st.button(f"🏆 CHAMPION: {champ_label}", key="btn_champ", disabled=("??" in champ_label))
     st.markdown('</div>', unsafe_allow_html=True)
 
 # 5. RIGHT - SEMIFINALS
