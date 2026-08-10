@@ -9,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. Premium AEW CSS Theme
+# 2. Premium AEW CSS Theme (Solid White Sidebar Explicitly Set)
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
@@ -31,10 +31,14 @@ st.markdown("""
         background: radial-gradient(circle at center, #161c28 0%, #090c12 100%) !important;
     }
 
-    /* Seamless Sidebar Matching Background */
-    [data-testid="stSidebar"] {
-        background-color: #0d111a !important;
-        border-right: 1px solid #1e2638 !important;
+    /* SOLID WHITE SIDEBAR OVERRIDE */
+    [data-testid="stSidebar"], section[data-testid="stSidebar"] {
+        background-color: #ffffff !important;
+        border-right: 1px solid #e2e8f0 !important;
+    }
+
+    [data-testid="stSidebar"] * {
+        color: #000000 !important;
     }
 
     /* Main Big AEW Gold Header */
@@ -142,9 +146,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 3. EXPANDED SINGLES RATINGS DATABASE
-# Includes Christian Cage, Bang Bang Gang, The Rascalz, Bullet Club War Dogs, and Top AEW Singles
 RATINGS = {
-    # Top Tier / Main Eventers
+    # Main Eventers
     "Will Ospreay": 97.5, 
     "Jon Moxley": 92.3, 
     "Hangman Adam Page": 91.2, 
@@ -178,7 +181,6 @@ RATINGS = {
 }
 
 def get_shuffled_roster():
-    # Randomly select 16 wrestlers out of the expanded pool for each tournament draft
     keys = list(RATINGS.keys())
     random.shuffle(keys)
     return keys[:16]
