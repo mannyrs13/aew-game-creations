@@ -9,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. Premium AEW CSS Theme (Solid White Sidebar Explicitly Set)
+# 2. Premium AEW CSS Theme
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
@@ -145,45 +145,45 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 3. EXPANDED SINGLES RATINGS DATABASE
-RATINGS = {
-    # Main Eventers
-    "Will Ospreay": 97.5, 
-    "Jon Moxley": 92.3, 
-    "Hangman Adam Page": 91.2, 
-    "Jay White": 90.5,             # Bang Bang Gang
-    "Christian Cage": 88.0,        # Kept - Great Singles Contender
-    "Claudio Castagnoli": 88.7, 
-    "Ricochet": 87.8, 
-    "Orange Cassidy": 86.5, 
-    "Kyle Fletcher": 86.4, 
-    "Bandido": 85.8, 
-    "Katsuyori Shibata": 85.0, 
-
-    # Bang Bang Gang & Crossovers
-    "Juice Robinson": 82.5,        # Bang Bang Gang
-    "Ace Austin": 81.8,           # Bang Bang Gang
-    "Gabe Kidd": 84.5,            # Bullet Club War Dogs
-    "David Finlay": 83.8,         # Bullet Club War Dogs
-    "Clark Connors": 81.0,        # Bullet Club War Dogs
-
-    # The Rascalz
-    "Trey Miguel": 82.0,          # The Rascalz
-    "Zachary Wentz": 81.2,        # The Rascalz
-    "Myron Reed": 79.5,           # The Rascalz
-
-    # Midcard & Solid Contenders
-    "Roderick Strong": 84.1, 
-    "Kyle O'Reilly": 83.5, 
-    "Wheeler Yuta": 82.3, 
-    "Daniel Garcia": 81.5, 
-    "Hologram": 80.0
+# 3. EXPANDED & BALANCED SINGLES POOL DATABASE
+TOP_TIER_SINGLES = {
+    "Will Ospreay": 97.5, "MJF": 97.0, "Kenny Omega": 97.0, "Jon Moxley": 96.0,
+    "Kazuchika Okada": 96.0, "Swerve Strickland": 95.0, "Zack Sabre Jr.": 94.0,
+    "Shingo Takagi": 93.0, "Hangman Adam Page": 91.2, "Jay White": 90.5,
+    "Christian Cage": 90.0, "Mistico": 90.0
 }
 
+UPPER_MIDCARD_SINGLES = {
+    "Darby Allin": 89.0, "Claudio Castagnoli": 88.7, "Samoa Joe": 88.0, "Bobby Lashley": 88.0,
+    "Ricochet": 87.8, "Chris Jericho": 87.0, "Orange Cassidy": 86.5, "Kyle Fletcher": 86.4,
+    "Bandido": 85.8, "Eddie Kingston": 85.5, "Konosuke Takeshita": 85.5, "Andrade El Idolo": 85.0,
+    "Katsuyori Shibata": 85.0, "Gabe Kidd": 84.5, "Mark Briscoe": 83.8, "David Finlay": 83.8,
+    "Jack Perry": 82.5, "Buddy Matthews": 82.5, "Rush": 82.0
+}
+
+MIDCARD_SINGLES = {
+    "Juice Robinson": 82.5, "Roderick Strong": 82.3, "Wheeler Yuta": 82.3, "Trey Miguel": 82.0,
+    "Ace Austin": 81.8, "Daniel Garcia": 81.5, "Zachary Wentz": 81.2, "Shelton Benjamin": 81.0,
+    "Brody King": 81.0, "Clark Connors": 81.0, "Hook": 81.0, "Wardlow": 80.0,
+    "Kyle O'Reilly": 80.0, "Hologram": 80.0, "Myron Reed": 79.5, "Sammy Guevara": 79.0,
+    "Brian Cage": 79.0, "Lio Rush": 78.0, "The Beast Mortos": 77.0, "Lance Archer": 77.0,
+    "Trent Beretta": 76.0, "Scorpio Sky": 75.0, "Lee Johnson": 75.0, "Komander": 74.0,
+    "Action Andretti": 71.0
+}
+
+# Merge complete database for match score lookups
+RATINGS = {**TOP_TIER_SINGLES, **UPPER_MIDCARD_SINGLES, **MIDCARD_SINGLES}
+
 def get_shuffled_roster():
-    keys = list(RATINGS.keys())
-    random.shuffle(keys)
-    return keys[:16]
+    # Randomly select a balanced mix for each tournament:
+    # 4 Top Stars + 8 Upper Midcarders + 4 Midcarders = 16 Total
+    top_picks = random.sample(list(TOP_TIER_SINGLES.keys()), 4)
+    upper_picks = random.sample(list(UPPER_MIDCARD_SINGLES.keys()), 8)
+    mid_picks = random.sample(list(MIDCARD_SINGLES.keys()), 4)
+    
+    full_pool = top_picks + upper_picks + mid_picks
+    random.shuffle(full_pool)
+    return full_pool
 
 # Initialize Session State
 if "slots" not in st.session_state:
