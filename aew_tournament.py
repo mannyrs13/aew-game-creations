@@ -9,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. Premium AEW Theme CSS with White Sidebar Override
+# 2. Premium AEW CSS Theme
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
@@ -31,14 +31,10 @@ st.markdown("""
         background: radial-gradient(circle at center, #161c28 0%, #090c12 100%) !important;
     }
 
-    /* White Navigation Sidebar Override */
+    /* Seamless Sidebar Matching Background */
     [data-testid="stSidebar"] {
-        background-color: #ffffff !important;
-        border-right: 1px solid #e2e8f0 !important;
-    }
-
-    [data-testid="stSidebar"] * {
-        color: #000000 !important;
+        background-color: #0d111a !important;
+        border-right: 1px solid #1e2638 !important;
     }
 
     /* Main Big AEW Gold Header */
@@ -145,18 +141,47 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 3. Ratings Database
+# 3. EXPANDED SINGLES RATINGS DATABASE
+# Includes Christian Cage, Bang Bang Gang, The Rascalz, Bullet Club War Dogs, and Top AEW Singles
 RATINGS = {
-    "Will Ospreay": 97.5, "Christian Cage": 88.0, "Orange Cassidy": 86.5, "Bandido": 85.8,
-    "Hologram": 80.0, "Claudio Castagnoli": 88.7, "Wheeler Yuta": 82.3, "Roderick Strong": 84.1,
-    "Darby Allin": 89.0, "Hangman Adam Page": 91.2, "Kyle Fletcher": 86.4, "Kyle O'Reilly": 83.5,
-    "Katsuyori Shibata": 85.0, "Jon Moxley": 92.3, "Daniel Garcia": 81.5, "Ricochet": 87.8
+    # Top Tier / Main Eventers
+    "Will Ospreay": 97.5, 
+    "Jon Moxley": 92.3, 
+    "Hangman Adam Page": 91.2, 
+    "Jay White": 90.5,             # Bang Bang Gang
+    "Christian Cage": 88.0,        # Kept - Great Singles Contender
+    "Claudio Castagnoli": 88.7, 
+    "Ricochet": 87.8, 
+    "Orange Cassidy": 86.5, 
+    "Kyle Fletcher": 86.4, 
+    "Bandido": 85.8, 
+    "Katsuyori Shibata": 85.0, 
+
+    # Bang Bang Gang & Crossovers
+    "Juice Robinson": 82.5,        # Bang Bang Gang
+    "Ace Austin": 81.8,           # Bang Bang Gang
+    "Gabe Kidd": 84.5,            # Bullet Club War Dogs
+    "David Finlay": 83.8,         # Bullet Club War Dogs
+    "Clark Connors": 81.0,        # Bullet Club War Dogs
+
+    # The Rascalz
+    "Trey Miguel": 82.0,          # The Rascalz
+    "Zachary Wentz": 81.2,        # The Rascalz
+    "Myron Reed": 79.5,           # The Rascalz
+
+    # Midcard & Solid Contenders
+    "Roderick Strong": 84.1, 
+    "Kyle O'Reilly": 83.5, 
+    "Wheeler Yuta": 82.3, 
+    "Daniel Garcia": 81.5, 
+    "Hologram": 80.0
 }
 
 def get_shuffled_roster():
+    # Randomly select 16 wrestlers out of the expanded pool for each tournament draft
     keys = list(RATINGS.keys())
     random.shuffle(keys)
-    return keys
+    return keys[:16]
 
 # Initialize Session State
 if "slots" not in st.session_state:
