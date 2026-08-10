@@ -46,10 +46,11 @@ WOMENS_TAG_ROSTER = [
     "Divine Dominion", "The Babes of Wrath", "Timeless Love Bombs", "Sisters of Sin", "The Brawling Birds"
 ]
 
+# Trios Roster (Corrected The Opps & The Death Riders)
 TRIOS_ROSTER = [
     "The Elite", "The Death Riders", "The Conglomeration", "The Hurt Syndicate", "The Don Callis Family", 
-    "Undisputed Kingdom", "Bang Bang Gang", "La Facción Ingobernable", "Dark Order", "The Acclaimed & Daddy Ass",
-    "Top Flight & Action Andretti"
+    "Undisputed Kingdom", "Bang Bang Gang", "La Facción Ingobernable", "Dark Order",
+    "The Rascalz", "Bullet Club War Dogs", "The Opps", "Top Flight & Action Andretti"
 ]
 
 CROSSOVER_MENS = ["Shingo Takagi", "Zack Sabre Jr.", "Hiromu Takahashi", "Hiroshi Tanahashi", "Yota Tsuji", "Tomohiro Ishii", "Gabe Kidd", "Hechicero", "Mistico", "Atlantis Jr.", "Mascara Dorada", "Volador Jr.", "Titan", "El Desperado"]
@@ -82,7 +83,7 @@ BOOKING_FREQUENCY = {
     "Private Party": 1, "La Facción Ingobernable": 2, 
     "Top Flight": 2, "The Gunns": 2, "MxM Collection": 1, "Undisputed Kingdom": 4, 
     "The Righteous": 1, "Gates of Agony": 2, "Dark Order": 1, "SkyFlight": 1, 
-    "The Premier Athletes": 1, "The Elite": 3, "The Acclaimed & Daddy Ass": 4, "Top Flight & Action Andretti": 2,
+    "The Premier Athletes": 1, "The Elite": 3, "The Rascalz": 3, "Bullet Club War Dogs": 3, "The Opps": 3, "Top Flight & Action Andretti": 2,
     "Timeless Love Bombs": 3, "The Babes of Wrath": 3, "Sisters of Sin": 2, "The Brawling Birds": 2, "Divine Dominion": 3,
     "Zack Sabre Jr.": 3, "Shingo Takagi": 3, "Mistico": 3, "Hechicero": 3, "Hiromu Takahashi": 2, 
     "Yota Tsuji": 2, "El Desperado": 2, "Tomohiro Ishii": 2, "Gabe Kidd": 2, "Volador Jr.": 2, 
@@ -113,10 +114,10 @@ STAR_POWER_DB = {
     "Megan Bayne": 79, "Queen Aminata": 78, "Taya Valkyrie": 77, "Billie Starkz": 76, "Thekla": 75, 
     "Anna Jay": 75, "Zeuxis": 75, "Red Velvet": 74, "Emi Sakura": 74, "Maya World": 73, "Alex Windsor": 73, 
     "Harley Cameron": 72, "Penelope Ford": 72, "Lena Kross": 72, "Diamante": 71,
-    "The Elite": 95, "The Young Bucks": 95, "FTR": 94, "The Death Riders": 93, "Timeless Love Bombs": 90, 
-    "The Hurt Syndicate": 89, "Motor City Machine Guns": 88, "TMDK": 88, "Mistico, Volador Jr. & Atlantis Jr.": 88, 
-    "Bang Bang Gang": 87, "The Conglomeration": 86, "Bishamon": 86, "The Don Callis Family": 85, 
-    "The Acclaimed & Daddy Ass": 85, "The Brawling Birds": 85, "Guerreros Laguneros": 85, "The Babes of Wrath": 84, 
+    "The Elite": 95, "The Young Bucks": 95, "FTR": 94, "The Death Riders": 94, "Timeless Love Bombs": 90, 
+    "The Hurt Syndicate": 89, "The Opps": 89, "Motor City Machine Guns": 88, "TMDK": 88, "Mistico, Volador Jr. & Atlantis Jr.": 88, 
+    "Bang Bang Gang": 87, "The Conglomeration": 86, "The Rascalz": 86, "Bullet Club War Dogs": 86,
+    "Bishamon": 86, "The Don Callis Family": 85, "The Brawling Birds": 85, "Guerreros Laguneros": 85, "The Babes of Wrath": 84, 
     "La Facción Ingobernable": 83, "The Gunns": 82, "Sisters of Sin": 82, "Undisputed Kingdom": 81, "Top Flight": 80, 
     "Top Flight & Action Andretti": 79, "The Outrunners": 79, "Private Party": 78, "SkyFlight": 78, 
     "MxM Collection": 77, "The Righteous": 76, "Gates of Agony": 76, "Divine Dominion": 76, "Dark Order": 75, "The Premier Athletes": 74
