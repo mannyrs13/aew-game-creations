@@ -6,7 +6,7 @@ st.set_page_config(
     page_title="AEW PPV GM Sorter",
     page_icon="🏆",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 # --- 2. AEW UNIVERSE DATA & ROSTERS ---
@@ -122,29 +122,44 @@ STAR_POWER_DB = {
     "MxM Collection": 77, "The Righteous": 76, "Gates of Agony": 76, "Divine Dominion": 76, "Dark Order": 75, "The Premier Athletes": 74
 }
 
-# --- 3. PREMIUM FRIENDLY AEW THEME CSS ---
+# --- 3. HIGH-VISIBILITY SCROLLBAR AEW THEME CSS ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
 
+    /* Enable Vertical Scrolling */
     html, body, [data-testid="stAppViewContainer"], .stApp {
         overflow-y: auto !important;
         height: auto !important;
     }
 
-    ::-webkit-scrollbar { width: 10px; }
-    ::-webkit-scrollbar-track { background: #080a0e; }
-    ::-webkit-scrollbar-thumb { background: #ffd700; border-radius: 5px; }
-    ::-webkit-scrollbar-thumb:hover { background: #ef4444; }
+    /* HIGH-VISIBILITY NEON GOLD SCROLLBAR */
+    ::-webkit-scrollbar { 
+        width: 14px !important; 
+    }
+    ::-webkit-scrollbar-track { 
+        background: #121824 !important; 
+        border-left: 1px solid #253147 !important;
+    }
+    ::-webkit-scrollbar-thumb { 
+        background: linear-gradient(180deg, #ffd700 0%, #d4af37 100%) !important; 
+        border-radius: 7px !important;
+        border: 2px solid #121824 !important;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.8) !important;
+    }
+    ::-webkit-scrollbar-thumb:hover { 
+        background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%) !important; 
+    }
 
+    /* Page Spacing */
     .block-container {
-        padding-top: 3.5rem !important;
+        padding-top: 2.5rem !important;
         padding-bottom: 3rem !important;
         max-width: 98% !important;
     }
 
     .stApp {
-        background: radial-gradient(circle at center, #1c2333 0%, #090c12 100%) !important;
+        background: radial-gradient(circle at center, #181d28 0%, #080a0e 100%) !important;
     }
 
     .aew-main-title {
@@ -154,7 +169,7 @@ st.markdown("""
         color: #ffd700;
         text-transform: uppercase;
         letter-spacing: 0.12em;
-        margin-top: 10px !important;
+        margin-top: 5px !important;
         margin-bottom: 0.8rem;
         font-family: 'Impact', 'Montserrat', sans-serif;
         text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 35px rgba(255, 215, 0, 0.3);
@@ -186,11 +201,12 @@ st.markdown("""
         margin-left: 10px;
     }
 
+    /* Active 'PLACE HERE' Metallic Gold Buttons */
     div.stButton > button {
         width: 100% !important;
-        background: linear-gradient(135deg, #00ff66 0%, #00cc52 100%) !important;
+        background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%) !important;
         color: #000000 !important;
-        border: 1px solid #66ff99 !important;
+        border: 1px solid #ffe566 !important;
         border-radius: 6px !important;
         padding: 0.55rem 0.2rem !important;
         font-weight: 900 !important;
@@ -198,18 +214,19 @@ st.markdown("""
         font-family: 'Montserrat', sans-serif !important;
         letter-spacing: 0.04em !important;
         text-transform: uppercase !important;
-        box-shadow: 0 4px 12px rgba(0, 255, 102, 0.3) !important;
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3) !important;
         transition: all 0.15s ease-in-out !important;
     }
 
     div.stButton > button:hover {
-        background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%) !important;
-        color: #000000 !important;
-        border-color: #ffe566 !important;
-        box-shadow: 0 0 18px rgba(255, 215, 0, 0.6) !important;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+        color: #ffffff !important;
+        border-color: #f87171 !important;
+        box-shadow: 0 0 18px rgba(239, 68, 68, 0.6) !important;
         transform: scale(1.02);
     }
 
+    /* Disabled / Gender Mismatch Slots */
     div.stButton > button:disabled {
         background: #182030 !important;
         color: #52627a !important;
@@ -218,6 +235,7 @@ st.markdown("""
         font-weight: 800 !important;
     }
 
+    /* Placed Wrestler Cards */
     .placed-slot {
         background: linear-gradient(180deg, #1e283d 0%, #111724 100%);
         border: 1px solid #2e3c59;
@@ -363,7 +381,7 @@ def place_talent(m_idx, s_idx):
     auto_draw_next_talent()
     st.rerun()
 
-# --- 6. FLOATING MODAL POP-UP DIALOG (REPLACES DESKTOP POPUP) ---
+# --- 6. FLOATING MODAL POP-UP DIALOG ---
 @st.dialog("🏆 FINAL CARD & SCORES")
 def show_final_card_dialog():
     ppv_title = st.session_state.selected_ppv.upper()
