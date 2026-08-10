@@ -9,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. Premium AEW CSS Theme (Optimized Text Fit & Padding)
+# 2. Enhanced AEW Theme & Gradient Background CSS
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
@@ -26,14 +26,21 @@ st.markdown("""
         max-width: 99% !important;
     }
 
+    /* Rich Obsidian/Dark Slate Radial Gradient Background */
     .stApp {
-        background: radial-gradient(circle at center, #181d28 0%, #080a0e 100%) !important;
+        background: radial-gradient(circle at center, #161c28 0%, #090c12 100%) !important;
     }
 
-    /* AEW Main Header */
+    /* Seamless Sidebar Matching Background */
+    [data-testid="stSidebar"] {
+        background-color: #0d111a !important;
+        border-right: 1px solid #1e2638 !important;
+    }
+
+    /* Main Big AEW Gold Header */
     .aew-main-title {
         text-align: center;
-        font-size: 2.5rem;
+        font-size: 2.6rem;
         font-weight: 900;
         color: #ffd700;
         text-transform: uppercase;
@@ -55,7 +62,7 @@ st.markdown("""
         font-family: 'Impact', 'Montserrat', sans-serif;
         padding: 4px 0;
         margin-bottom: 8px;
-        border-bottom: 1px solid #334155;
+        border-bottom: 1px solid #2b384e;
         text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
     }
 
@@ -80,7 +87,7 @@ st.markdown("""
         color: #000000 !important;
         border: 2px solid #ffe566 !important;
         border-radius: 5px !important;
-        padding: 0.35rem 0.1rem !important;
+        padding: 0.38rem 0.1rem !important;
         font-weight: 900 !important;
         font-size: 0.78rem !important;
         font-family: 'Montserrat', sans-serif !important;
@@ -103,7 +110,7 @@ st.markdown("""
 
     /* FILLED / PLACED WRESTLER CARDS */
     div.stButton > button:disabled {
-        background: linear-gradient(180deg, #182030 0%, #0d121c 100%) !important;
+        background: linear-gradient(180deg, #1a2233 0%, #0d121d 100%) !important;
         color: #ffffff !important;
         border: 1px solid #2b384e !important;
         border-left: 4px solid #00ff66 !important;
