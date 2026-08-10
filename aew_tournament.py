@@ -9,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. Enhanced AEW Theme & Gradient Background CSS
+# 2. Premium AEW Theme CSS with White Sidebar Override
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
@@ -26,15 +26,19 @@ st.markdown("""
         max-width: 99% !important;
     }
 
-    /* Rich Obsidian/Dark Slate Radial Gradient Background */
+    /* Main App Background */
     .stApp {
         background: radial-gradient(circle at center, #161c28 0%, #090c12 100%) !important;
     }
 
-    /* Seamless Sidebar Matching Background */
+    /* White Navigation Sidebar Override */
     [data-testid="stSidebar"] {
-        background-color: #0d111a !important;
-        border-right: 1px solid #1e2638 !important;
+        background-color: #ffffff !important;
+        border-right: 1px solid #e2e8f0 !important;
+    }
+
+    [data-testid="stSidebar"] * {
+        color: #000000 !important;
     }
 
     /* Main Big AEW Gold Header */
