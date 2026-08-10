@@ -127,28 +127,28 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
 
-    /* Enable Vertical Scrolling */
-    html, body, [data-testid="stAppViewContainer"], .stApp {
+    /* ENSURE MAIN STREAMLIT CONTAINERS ALLOW SCROLLING */
+    html, body, [data-testid="stAppViewContainer"], .stApp, [data-testid="stMain"] {
         overflow-y: auto !important;
-        height: auto !important;
     }
 
-    /* HIGH-VISIBILITY NEON GOLD SCROLLBAR */
+    /* HIGH-VISIBILITY NEON GOLD SCROLLBAR OVERRIDE */
     ::-webkit-scrollbar { 
         width: 14px !important; 
+        height: 14px !important;
     }
     ::-webkit-scrollbar-track { 
-        background: #121824 !important; 
-        border-left: 1px solid #253147 !important;
+        background: #111622 !important; 
+        border-left: 1px solid #2b384e !important;
     }
     ::-webkit-scrollbar-thumb { 
-        background: linear-gradient(180deg, #ffd700 0%, #d4af37 100%) !important; 
-        border-radius: 7px !important;
-        border: 2px solid #121824 !important;
+        background: #ffd700 !important; 
+        border-radius: 6px !important;
+        border: 2px solid #111622 !important;
         box-shadow: 0 0 10px rgba(255, 215, 0, 0.8) !important;
     }
     ::-webkit-scrollbar-thumb:hover { 
-        background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%) !important; 
+        background: #ef4444 !important; 
     }
 
     /* Page Spacing */
